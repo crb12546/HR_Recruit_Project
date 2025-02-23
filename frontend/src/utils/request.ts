@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosResponse, type AxiosError } from 'axios'
 import { ElMessage } from 'element-plus'
+import type { APIResponse, ErrorResponse } from '@/types/api'
 
 export const request: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
@@ -22,12 +23,12 @@ request.interceptors.request.use(
 
 // 响应拦截器
 request.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response: AxiosResponse<APIResponse>) => {
     return response
   },
-  (error: AxiosError) => {
+  (error: AxiosError<ErrorResponse>) => {
     // 统一错误处理
-    const message = error.response?.data?.detail || '请求失败，请重试'
+    const message = (error.response?.data as ErrorResponse)?.detail || '请求失败，请重试'
     ElMessage.error(message)
     return Promise.reject(error)
   }
