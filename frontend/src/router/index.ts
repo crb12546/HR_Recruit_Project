@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
     component: ResumeDetail,
     props: route => ({ id: Number(route.params.id) })
   }
-]
+] as RouteRecordRaw[]
 
 const router = createRouter({
   history: createWebHistory(),

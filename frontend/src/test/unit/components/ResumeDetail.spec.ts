@@ -23,7 +23,7 @@ vi.mock('element-plus', () => ({
 }))
 
 describe('简历详情组件', () => {
-  const mockResume = {
+  const mockResume: Resume = {
     id: 1,
     candidate_name: '张三',
     file_url: 'http://example.com/resume.pdf',
@@ -60,8 +60,7 @@ describe('简历详情组件', () => {
     })
 
     const store = useResumeStore()
-    // @ts-ignore
-    store.getResumeById.mockResolvedValue(mockResume)
+    vi.mocked(store.getResumeById).mockResolvedValue(mockResume)
 
     await wrapper.vm.$nextTick()
 
@@ -87,10 +86,8 @@ describe('简历详情组件', () => {
     })
 
     const store = useResumeStore()
-    // @ts-ignore
-    store.getResumeById.mockResolvedValue(mockResume)
-    // @ts-ignore
-    store.removeTagFromResume.mockResolvedValue({
+    vi.mocked(store.getResumeById).mockResolvedValue(mockResume)
+    vi.mocked(store.removeTagFromResume).mockResolvedValue({
       ...mockResume,
       tags: [mockResume.tags[1]]
     })
@@ -121,8 +118,7 @@ describe('简历详情组件', () => {
     })
 
     const store = useResumeStore()
-    // @ts-ignore
-    store.getResumeById.mockResolvedValue(mockResume)
+    vi.mocked(store.getResumeById).mockResolvedValue(mockResume)
 
     await wrapper.vm.$nextTick()
     
@@ -145,8 +141,7 @@ describe('简历详情组件', () => {
     })
 
     const store = useResumeStore()
-    // @ts-ignore
-    store.getResumeById.mockRejectedValue(new Error('加载失败'))
+    vi.mocked(store.getResumeById).mockRejectedValue(new Error('加载失败'))
 
     await wrapper.vm.$nextTick()
     expect(ElMessage.error).toHaveBeenCalledWith('获取简历详情失败')
