@@ -1,0 +1,7 @@
+工作经验：4年
+技能：Python, FastAPI, Django, Flask, PostgreSQL, MongoDB, Redis, RabbitMQ, Kafka, Docker, Kubernetes, Git, Jenkins, Prometheus
+教育背景：华南理工大学 计算机科学与技术 本科
+工作单位：腾讯云, 深信服科技
+职位：Python开发工程师, 后端开发工程师
+项目：腾讯云函数计算平台, 深信服安全管理平台
+证书：腾讯云开发者认证, AWS认证开发工程师, Python高级开发工程师认证

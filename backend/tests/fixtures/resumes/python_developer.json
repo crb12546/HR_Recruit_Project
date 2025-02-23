@@ -1,0 +1,52 @@
+{
+    "candidate_id": "PD001",
+    "name": "王建国",
+    "age": 28,
+    "contact": {
+        "phone": "135xxxx3456",
+        "email": "wangjg@example.com",
+        "location": "深圳市南山区"
+    },
+    "education": {
+        "university": "华南理工大学",
+        "major": "计算机科学与技术",
+        "degree": "本科",
+        "graduation_year": 2018
+    },
+    "work_experience": [
+        {
+            "company": "腾讯云",
+            "position": "Python开发工程师",
+            "period": "2021-至今",
+            "achievements": [
+                "负责云函数平台API开发，使用FastAPI框架",
+                "开发自动化部署系统，提升部署效率200%",
+                "设计实现分布式日志收集系统",
+                "优化API性能，平均响应时间降低40%"
+            ]
+        },
+        {
+            "company": "深信服科技",
+            "position": "后端开发工程师",
+            "period": "2019-2021",
+            "achievements": [
+                "参与安全管理平台后端开发",
+                "使用Python开发自动化测试框架",
+                "实现系统监控告警功能"
+            ]
+        }
+    ],
+    "skills": {
+        "programming_languages": ["Python", "Go"],
+        "frameworks": ["FastAPI", "Django", "Flask"],
+        "databases": ["PostgreSQL", "MongoDB", "Redis"],
+        "middleware": ["RabbitMQ", "Kafka"],
+        "cloud_services": ["Docker", "Kubernetes"],
+        "tools": ["Git", "Jenkins", "Prometheus"]
+    },
+    "certifications": [
+        "腾讯云开发者认证",
+        "AWS认证开发工程师",
+        "Python高级开发工程师认证"
+    ]
+}

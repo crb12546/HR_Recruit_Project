@@ -1,0 +1,52 @@
+{
+    "candidate_id": "BE001",
+    "name": "赵伟东",
+    "age": 30,
+    "contact": {
+        "phone": "139xxxx2345",
+        "email": "zhaowed@example.com",
+        "location": "广州市天河区"
+    },
+    "education": {
+        "university": "华南师范大学",
+        "major": "软件工程",
+        "degree": "本科",
+        "graduation_year": 2017
+    },
+    "work_experience": [
+        {
+            "company": "京东科技",
+            "position": "高级后端开发工程师",
+            "period": "2022-至今",
+            "achievements": [
+                "负责订单系统从Java迁移到Python的重构工作",
+                "使用Python和FastAPI重写核心微服务",
+                "优化系统性能，提升吞吐量30%",
+                "指导团队成员学习Python开发"
+            ]
+        },
+        {
+            "company": "广州唯品会",
+            "position": "Java开发工程师",
+            "period": "2017-2022",
+            "achievements": [
+                "负责商品管理系统后端开发",
+                "设计实现库存管理模块",
+                "开发自动化测试框架",
+                "参与系统架构优化"
+            ]
+        }
+    ],
+    "skills": {
+        "java_stack": ["Spring Boot", "MyBatis", "Maven"],
+        "python_stack": ["FastAPI", "Django", "Poetry"],
+        "databases": ["MySQL", "PostgreSQL", "Redis"],
+        "middleware": ["RabbitMQ", "Kafka", "ZooKeeper"],
+        "tools": ["Git", "Jenkins", "Docker"]
+    },
+    "certifications": [
+        "Oracle认证Java工程师",
+        "Python高级开发工程师认证",
+        "阿里云解决方案架构师认证"
+    ]
+}

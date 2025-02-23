@@ -29,6 +29,7 @@ def test_match_resumes(client, db_session):
     # Create a test job requirement
     job = JobRequirement(
         position_name="Python后端工程师",
+        responsibilities="负责后端API开发和维护",
         requirements="熟悉Python, FastAPI框架\n3年以上相关开发经验",
         tags=["Python", "FastAPI", "3年经验"]
     )
