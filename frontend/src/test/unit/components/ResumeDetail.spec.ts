@@ -4,6 +4,7 @@ import { ElMessage } from 'element-plus'
 import ResumeDetail from '@/components/resume/ResumeDetail.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { useResumeStore } from '@/store/resume'
+import type { Resume } from '@/types'
 
 vi.mock('vue-router', () => ({
   useRoute: () => ({
