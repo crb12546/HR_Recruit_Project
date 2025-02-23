@@ -1,13 +1,11 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import JobRequirementForm from '@/components/job/JobRequirementForm.vue'
 
 describe('JobRequirementForm Component', () => {
   it('should validate required fields', async () => {
     const wrapper = mount(JobRequirementForm)
-    const form = wrapper.findComponent(ElForm)
-    
     // Submit empty form
     await wrapper.find('button[type="submit"]').trigger('click')
     
