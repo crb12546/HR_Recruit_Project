@@ -21,12 +21,19 @@ describe('职位需求表单组件', () => {
     const wrapper = mount(JobRequirementForm)
     
     // 填写表单数据
-    await wrapper.find('input[id="position_name"]').setValue('Python后端工程师')
-    await wrapper.find('input[id="department"]').setValue('技术部')
-    await wrapper.find('textarea[id="responsibilities"]').setValue('负责后端API开发和维护')
-    await wrapper.find('textarea[id="requirements"]').setValue('熟悉Python, FastAPI框架\n3年以上相关开发经验')
-    await wrapper.find('input[id="salary_range"]').setValue('25k-35k')
-    await wrapper.find('input[id="location"]').setValue('上海')
+    const positionInput = wrapper.find('input[id="position_name"]')
+    const departmentInput = wrapper.find('input[id="department"]')
+    const responsibilitiesInput = wrapper.find('textarea[id="responsibilities"]')
+    const requirementsInput = wrapper.find('textarea[id="requirements"]')
+    const salaryInput = wrapper.find('input[id="salary_range"]')
+    const locationInput = wrapper.find('input[id="location"]')
+
+    await positionInput.setValue('Python后端工程师')
+    await departmentInput.setValue('技术部')
+    await responsibilitiesInput.setValue('负责后端API开发和维护')
+    await requirementsInput.setValue('熟悉Python, FastAPI框架\n3年以上相关开发经验')
+    await salaryInput.setValue('25k-35k')
+    await locationInput.setValue('上海')
     
     // 提交表单
     await wrapper.find('button[type="primary"]').trigger('click')
@@ -48,12 +55,20 @@ describe('职位需求表单组件', () => {
     const wrapper = mount(JobRequirementForm)
     
     // 验证所有必要的表单项都存在
-    expect(wrapper.find('label[for="position_name"]').text()).toBe('职位名称')
-    expect(wrapper.find('label[for="department"]').text()).toBe('部门')
-    expect(wrapper.find('label[for="responsibilities"]').text()).toBe('岗位职责')
-    expect(wrapper.find('label[for="requirements"]').text()).toBe('任职要求')
-    expect(wrapper.find('label[for="salary_range"]').text()).toBe('薪资范围')
-    expect(wrapper.find('label[for="location"]').text()).toBe('工作地点')
+    const labels = wrapper.findAll('label')
+    const labelTexts = {
+      'position_name': '职位名称',
+      'department': '部门',
+      'responsibilities': '岗位职责',
+      'requirements': '任职要求',
+      'salary_range': '薪资范围',
+      'location': '工作地点'
+    }
+
+    for (const [id, text] of Object.entries(labelTexts)) {
+      const label = labels.find(l => l.attributes('for') === id)
+      expect(label?.text()).toBe(text)
+    }
     
     // 验证提交按钮存在
     expect(wrapper.find('button[type="primary"]').text()).toBe('提交')
