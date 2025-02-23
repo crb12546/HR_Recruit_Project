@@ -1,0 +1,85 @@
+{
+    "candidate_id": "CC001",
+    "name": "张明华",
+    "age": 29,
+    "contact": {
+        "phone": "138xxxx4567",
+        "email": "zhangmh@example.com",
+        "location": "成都市武侯区"
+    },
+    "education": {
+        "university": "四川大学",
+        "major": "市场营销",
+        "degree": "本科",
+        "graduation_year": 2017
+    },
+    "work_experience": [
+        {
+            "company": "成都某科技公司",
+            "position": "Python开发工程师",
+            "period": "2023-至今",
+            "achievements": [
+                "参与公司内部管理系统开发",
+                "使用Python和Django开发后端API",
+                "编写自动化测试脚本",
+                "参与代码评审和技术分享"
+            ]
+        },
+        {
+            "company": "某大型零售企业",
+            "position": "营销经理",
+            "period": "2017-2022",
+            "achievements": [
+                "负责产品营销策略制定",
+                "管理营销团队和预算",
+                "分析销售数据和市场趋势"
+            ]
+        }
+    ],
+    "training": {
+        "course": "Python全栈开发培训",
+        "period": "2022.07-2022.12",
+        "content": [
+            "系统学习Python编程基础",
+            "Web开发框架Django和Flask",
+            "数据库设计和SQL编程",
+            "前端基础知识HTML/CSS/JavaScript"
+        ]
+    },
+    "projects": [
+        {
+            "name": "企业内部管理系统",
+            "year": 2023,
+            "tech_stack": ["Python", "Django"],
+            "achievements": [
+                "使用Python和Django开发后端API",
+                "实现员工管理、考勤统计功能",
+                "编写单元测试，提升代码质量",
+                "优化数据库查询性能"
+            ]
+        },
+        {
+            "name": "销售数据分析工具",
+            "year": 2022,
+            "tech_stack": ["Python", "Excel"],
+            "achievements": [
+                "使用Python处理Excel数据",
+                "开发数据可视化界面",
+                "实现自动生成分析报告",
+                "GitHub开源项目"
+            ]
+        }
+    ],
+    "skills": {
+        "programming": ["Python"],
+        "frameworks": ["Django", "Flask"],
+        "databases": ["MySQL", "SQLite"],
+        "tools": ["Git", "VS Code"],
+        "business": ["Excel数据分析", "项目管理", "团队协作"]
+    },
+    "certifications": [
+        {
+            "name": "CET-6"
+        }
+    ]
+}

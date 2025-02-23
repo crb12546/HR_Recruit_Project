@@ -1,0 +1,62 @@
+{
+    "candidate_id": "SP001",
+    "name": "张志远",
+    "age": 32,
+    "contact": {
+        "phone": "138xxxx6789",
+        "email": "zhangzy@example.com",
+        "location": "上海市浦东新区"
+    },
+    "education": {
+        "university": "上海交通大学",
+        "major": "计算机科学与技术",
+        "degree": "本科",
+        "graduation_year": 2015
+    },
+    "work_experience": [
+        {
+            "company": "字节跳动",
+            "position": "高级后端工程师",
+            "period": "2020-至今",
+            "achievements": [
+                "负责抖音电商核心支付系统的微服务架构设计和开发",
+                "带领10人团队完成支付系统重构，将系统QPS提升300%",
+                "设计并实现分布式事务解决方案，确保交易一致性",
+                "优化订单系统性能，将订单处理延迟降低40%"
+            ]
+        },
+        {
+            "company": "阿里巴巴",
+            "position": "资深Python开发工程师",
+            "period": "2017-2020",
+            "achievements": [
+                "参与淘宝直播后端系统开发，支持日均千万级直播场次",
+                "设计实现直播间商品推荐系统，提升转化率30%",
+                "负责系统监控平台开发，实现故障自动检测和告警"
+            ]
+        },
+        {
+            "company": "腾讯",
+            "position": "Python开发工程师",
+            "period": "2015-2017",
+            "achievements": [
+                "参与QQ音乐推荐系统开发",
+                "实现用户行为分析系统，处理日均TB级数据",
+                "开发自动化测试框架，提升测试效率50%"
+            ]
+        }
+    ],
+    "skills": {
+        "programming_languages": ["Python", "Go", "Java"],
+        "frameworks": ["FastAPI", "Django", "Flask", "gRPC"],
+        "databases": ["MySQL", "MongoDB", "Redis", "Elasticsearch"],
+        "middleware": ["RabbitMQ", "Kafka", "ZooKeeper"],
+        "cloud_services": ["阿里云", "AWS", "Kubernetes", "Docker"],
+        "tools": ["Git", "Jenkins", "Prometheus", "ELK"]
+    },
+    "certifications": [
+        "阿里云高级架构师认证",
+        "AWS解决方案架构师认证",
+        "项目管理专业人士认证（PMP）"
+    ]
+}

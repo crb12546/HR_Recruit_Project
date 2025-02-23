@@ -1,0 +1,84 @@
+{
+    "candidate_id": "DE001",
+    "name": "吴海峰",
+    "age": 32,
+    "contact": {
+        "phone": "136xxxx9012",
+        "email": "wuhf@example.com",
+        "location": "上海市浦东新区"
+    },
+    "education": [
+        {
+            "university": "复旦大学",
+            "major": "统计学",
+            "degree": "本科",
+            "graduation_year": 2015
+        },
+        {
+            "university": "同济大学",
+            "major": "数据科学",
+            "degree": "硕士",
+            "graduation_year": 2017
+        }
+    ],
+    "work_experience": [
+        {
+            "company": "阿里云",
+            "position": "高级数据工程师",
+            "period": "2021-至今",
+            "achievements": [
+                "负责数据仓库架构设计和优化",
+                "使用Python和Spark开发数据处理管道",
+                "优化数据处理性能，提升效率200%",
+                "指导团队进行ETL开发"
+            ]
+        },
+        {
+            "company": "携程旅行网",
+            "position": "数据工程师",
+            "period": "2017-2021",
+            "achievements": [
+                "设计实现用户行为分析平台",
+                "开发实时数据处理系统",
+                "构建机器学习特征工程流水线",
+                "优化数据warehouse架构"
+            ]
+        }
+    ],
+    "skills": {
+        "programming": ["Python", "Scala", "SQL"],
+        "big_data": ["Spark", "Hadoop", "Hive"],
+        "data_warehouse": ["Snowflake", "Redshift"],
+        "streaming": ["Kafka", "Flink", "Storm"],
+        "databases": ["PostgreSQL", "MongoDB"],
+        "cloud": ["阿里云", "AWS"]
+    },
+    "projects": [
+        {
+            "name": "阿里云数据湖平台",
+            "period": "2022-2023",
+            "achievements": [
+                "设计实现数据湖架构",
+                "开发Python/Spark数据处理框架",
+                "实现实时和批处理双模式",
+                "日处理数据量达到PB级"
+            ]
+        },
+        {
+            "name": "携程用户画像系统",
+            "period": "2019-2021",
+            "achievements": [
+                "设计用户特征工程框架",
+                "开发实时特征计算系统",
+                "构建用户行为分析模型",
+                "支持千万级用户分析"
+            ]
+        }
+    ],
+    "certifications": [
+        "阿里云数据分析专家认证",
+        "AWS高级数据工程师认证",
+        "Databricks Spark开发者认证",
+        "CFA二级"
+    ]
+}
