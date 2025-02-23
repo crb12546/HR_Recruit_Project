@@ -1,0 +1,7 @@
+工作经验：6年
+技能：Python, Scala, SQL, Spark, Hadoop, Hive, Snowflake, Redshift, Kafka, Flink, Storm, PostgreSQL, MongoDB, 阿里云, AWS
+教育背景：复旦大学 统计学 本科, 同济大学 数据科学 硕士
+工作单位：阿里云, 携程旅行网
+职位：高级数据工程师, 数据工程师
+项目：阿里云数据湖平台, 携程用户画像系统
+证书：阿里云数据分析专家认证, AWS高级数据工程师认证, Databricks Spark开发者认证, CFA二级

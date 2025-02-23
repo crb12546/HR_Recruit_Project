@@ -1,0 +1,8 @@
+工作经验：1年Python开发, 5年营销管理
+技能：Python, Django, Flask, MySQL, SQLite, Git, VS Code, Excel数据分析
+教育背景：四川大学 市场营销 本科
+工作单位：成都某科技公司, 某大型零售企业
+职位：Python开发工程师, 营销经理
+培训：Python全栈开发培训 (6个月)
+项目：企业内部管理系统, 销售数据分析工具
+证书：CET-6

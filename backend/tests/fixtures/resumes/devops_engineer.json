@@ -1,0 +1,87 @@
+{
+    "candidate_id": "DO001",
+    "name": "郑云峰",
+    "age": 33,
+    "contact": {
+        "phone": "133xxxx6789",
+        "email": "zhengyf@example.com",
+        "location": "深圳市南山区"
+    },
+    "education": {
+        "university": "华中科技大学",
+        "major": "计算机科学与技术",
+        "degree": "本科",
+        "graduation_year": 2014
+    },
+    "work_experience": [
+        {
+            "company": "腾讯云",
+            "position": "高级DevOps工程师",
+            "period": "2020-至今",
+            "achievements": [
+                "负责云原生平台的自动化部署和运维",
+                "设计实现容器化CI/CD流水线",
+                "优化部署流程，部署时间缩短70%",
+                "管理和优化Kubernetes集群"
+            ]
+        },
+        {
+            "company": "华为云",
+            "position": "DevOps工程师",
+            "period": "2017-2020",
+            "achievements": [
+                "开发自动化运维工具和脚本",
+                "构建微服务监控系统",
+                "实现自动化测试框架",
+                "管理多环境部署流程"
+            ]
+        },
+        {
+            "company": "金山云",
+            "position": "运维工程师",
+            "period": "2014-2017",
+            "achievements": [
+                "负责系统运维和监控",
+                "实现自动化部署脚本",
+                "参与容器化转型项目"
+            ]
+        }
+    ],
+    "skills": {
+        "programming": ["Python", "Shell", "Go"],
+        "container": ["Docker", "Kubernetes", "Helm"],
+        "ci_cd": ["Jenkins", "GitLab CI", "ArgoCD"],
+        "monitoring": ["Prometheus", "Grafana", "ELK"],
+        "cloud": ["腾讯云", "华为云", "阿里云"],
+        "config_management": ["Ansible", "Terraform", "Puppet"],
+        "version_control": ["Git", "GitHub", "GitLab"]
+    },
+    "projects": [
+        {
+            "name": "腾讯云原生平台",
+            "period": "2021-2023",
+            "achievements": [
+                "设计实现全自动化部署平台",
+                "开发多集群管理系统",
+                "实现灰度发布功能",
+                "支持每日3000+次部署"
+            ]
+        },
+        {
+            "name": "华为云微服务平台",
+            "period": "2018-2020",
+            "achievements": [
+                "构建微服务监控体系",
+                "实现自动化运维平台",
+                "开发容器管理系统",
+                "管理超过1000个容器节点"
+            ]
+        }
+    ],
+    "certifications": [
+        "Kubernetes管理员认证（CKA）",
+        "AWS解决方案架构师认证",
+        "腾讯云高级架构师认证",
+        "Docker认证工程师"
+    ]
+}
