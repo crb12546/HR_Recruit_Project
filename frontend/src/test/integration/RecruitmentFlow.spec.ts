@@ -98,8 +98,8 @@ const ResumeUploadComponent = {
         try {
           const result = await mockResumeStore.uploadResume(file)
           emit('upload-success', result)
-        } catch (error) {
-          ElMessage.error(error.message || '上传失败')
+        } catch (error: any) {
+          ElMessage.error(error?.message || '上传失败')
         }
       }
     }
