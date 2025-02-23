@@ -98,8 +98,9 @@ const ResumeUploadComponent = {
         try {
           const result = await mockResumeStore.uploadResume(file)
           emit('upload-success', result)
-        } catch (error: any) {
-          ElMessage.error(error?.message || '上传失败')
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : '上传失败'
+          ElMessage.error(message)
         }
       }
     }
@@ -131,15 +132,13 @@ const ResumeListComponent = {
     const matches = ref<Array<{ resume_id: number; match_score: number; match_explanation: string }>>([])
     
     onMounted(async () => {
-      const mockData = [{
-        resume_id: 1,
-        match_score: 0.95,
-        match_explanation: '技能和经验完全匹配职位要求'
-      }]
-      mockJobStore.getMatches.mockResolvedValue(mockData)
-      await mockJobStore.getMatches(props.jobId)
-      matches.value = mockData
-      await nextTick()
+      try {
+        const result = await mockJobStore.getMatches(props.jobId)
+        matches.value = result
+        await nextTick()
+      } catch (error) {
+        console.error('获取匹配结果失败:', error)
+      }
     })
     
     return { matches }
@@ -249,11 +248,12 @@ describe('招聘流程集成测试', () => {
         
         // 第三步：查看简历匹配结果
         // 模拟匹配结果数据
-        mockJobStore.getMatches.mockResolvedValue([{
+        const mockMatchData = [{
             resume_id: 1,
             match_score: 0.95,
             match_explanation: '技能和经验完全匹配职位要求'
-        }])
+        }]
+        mockJobStore.getMatches.mockResolvedValue(mockMatchData)
 
         const resumeList = mount(ResumeListComponent, {
             props: {
@@ -266,6 +266,12 @@ describe('招聘流程集成测试', () => {
             }
         })
 
+        // Wait for onMounted and data updates
+        await nextTick()
+        await new Promise(resolve => setTimeout(resolve, 0))
+        // Wait for onMounted hook and async operations to complete
+        await nextTick()
+        await new Promise(resolve => setTimeout(resolve, 100))
         await nextTick()
         console.log('ResumeList HTML:', resumeList.html())
         
