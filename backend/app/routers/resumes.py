@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
 from app.models.resume import Resume
+from app.models.tag import Tag
 from app.services.ocr import OCRService
 from app.services.gpt import GPTService
 from app.services.tag import TagService
