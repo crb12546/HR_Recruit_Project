@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Integer, String, Text, DateTime, JSON
 from datetime import datetime
 from . import Base
 
@@ -12,5 +12,6 @@ class JobRequirement(Base):
     requirements = Column(Text, nullable=False)
     salary_range = Column(String(50))
     location = Column(String(100))
+    tags = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

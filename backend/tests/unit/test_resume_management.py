@@ -26,7 +26,7 @@ def test_resume_upload(client, mocker):
     assert "talent_portrait" in data
     assert data["talent_portrait"] == "具有5年Python开发经验的后端工程师，擅长FastAPI框架"
 
-def test_resume_parse(client, db_session):
+def test_resume_parse(client, db_session, mocker):
     # Create a test resume
     resume = Resume(
         candidate_name="张三",
@@ -37,6 +37,10 @@ def test_resume_parse(client, db_session):
     db_session.add(resume)
     db_session.commit()
     
+    # Mock GPT service
+    mock_gpt = mocker.patch.object(GPTService, 'extract_resume_tags')
+    mock_gpt.return_value = [{"name": "Python"}, {"name": "FastAPI"}]
+
     response = client.post(f"/api/v1/resumes/{resume.id}/parse")
     assert response.status_code == 200
     data = response.json()

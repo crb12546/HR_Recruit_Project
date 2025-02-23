@@ -1,0 +1,52 @@
+{
+    "candidate_id": "FE001",
+    "name": "陈雨婷",
+    "age": 26,
+    "contact": {
+        "phone": "137xxxx5678",
+        "email": "chenyt@example.com",
+        "location": "杭州市西湖区"
+    },
+    "education": {
+        "university": "浙江大学",
+        "major": "数字媒体技术",
+        "degree": "本科",
+        "graduation_year": 2020
+    },
+    "work_experience": [
+        {
+            "company": "网易",
+            "position": "高级前端工程师",
+            "period": "2022-至今",
+            "achievements": [
+                "负责网易云音乐Web端核心功能开发",
+                "使用Vue.js 3.0重构用户中心模块",
+                "优化首屏加载时间，提升50%",
+                "开发组件库，提升团队开发效率"
+            ]
+        },
+        {
+            "company": "阿里巴巴",
+            "position": "前端开发工程师",
+            "period": "2020-2022",
+            "achievements": [
+                "参与淘宝直播间前端开发",
+                "实现直播间商品展示和互动功能",
+                "开发通用动画组件库"
+            ]
+        }
+    ],
+    "skills": {
+        "frameworks": ["Vue.js", "React", "Angular"],
+        "tools": ["TypeScript", "Webpack", "Vite"],
+        "ui_libraries": ["Element Plus", "Ant Design"],
+        "state_management": ["Vuex", "Pinia", "Redux"],
+        "testing": ["Jest", "Vitest"],
+        "version_control": ["Git", "GitLab"]
+    },
+    "certifications": [
+        "阿里巴巴前端认证工程师",
+        "Vue.js核心开发者认证",
+        "前端性能优化专家认证"
+    ]
+}

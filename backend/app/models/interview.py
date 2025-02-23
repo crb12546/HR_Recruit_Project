@@ -10,6 +10,7 @@ class Interview(Base):
     job_requirement_id = Column(Integer, ForeignKey("job_requirements.id"), nullable=False)
     interviewer_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     interview_time = Column(DateTime, nullable=False)
+    # Status values: scheduled, completed, cancelled
     status = Column(String(20), nullable=False, default="scheduled")
     feedback = Column(Text)
     score = Column(Float)

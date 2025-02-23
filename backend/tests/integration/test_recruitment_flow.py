@@ -84,7 +84,7 @@ def test_complete_recruitment_flow(
     feedback_data = {
         "score": 4.5,
         "feedback": "技术能力强，项目经验丰富，沟通良好",
-        "status": "通过"
+        "status": "completed"
     }
     response = client.post(
         f"/api/v1/interviews/{interview['id']}/feedback",

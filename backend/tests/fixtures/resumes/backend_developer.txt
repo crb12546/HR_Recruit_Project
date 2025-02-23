@@ -1,0 +1,7 @@
+工作经验：5年Java, 2年Python
+技能：Java, Spring Boot, MyBatis, Maven, Python, FastAPI, Django, Poetry, MySQL, PostgreSQL, Redis, RabbitMQ, Kafka, ZooKeeper, Git, Jenkins, Docker
+教育背景：华南师范大学 软件工程 本科
+工作单位：京东科技, 广州唯品会
+职位：高级后端开发工程师, Java开发工程师
+项目：京东订单系统重构, 唯品会商品管理系统
+证书：Oracle认证Java工程师, Python高级开发工程师认证, 阿里云解决方案架构师认证
