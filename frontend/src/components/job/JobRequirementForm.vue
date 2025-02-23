@@ -2,38 +2,38 @@
   <div class="job-requirement-form">
     <el-form
       ref="formRef"
-      :model="form"
+      :model="formData"
       :rules="rules"
       label-width="120px"
     >
       <el-form-item label="职位名称" prop="position_name">
-        <el-input v-model="form.position_name" />
+        <el-input v-model="formData.position_name" />
       </el-form-item>
       <el-form-item label="部门" prop="department">
-        <el-input v-model="form.department" />
+        <el-input v-model="formData.department" />
       </el-form-item>
       <el-form-item label="岗位职责" prop="responsibilities">
         <el-input
-          v-model="form.responsibilities"
+          v-model="formData.responsibilities"
           type="textarea"
           :rows="4"
         />
       </el-form-item>
       <el-form-item label="任职要求" prop="requirements">
         <el-input
-          v-model="form.requirements"
+          v-model="formData.requirements"
           type="textarea"
           :rows="4"
         />
       </el-form-item>
       <el-form-item label="薪资范围" prop="salary_range">
-        <el-input v-model="form.salary_range" />
+        <el-input v-model="formData.salary_range" />
       </el-form-item>
       <el-form-item label="工作地点" prop="location">
-        <el-input v-model="form.location" />
+        <el-input v-model="formData.location" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm">提交</el-button>
+        <el-button type="primary" @click="handleSubmit">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -46,7 +46,7 @@ import { ElMessage } from 'element-plus'
 const emit = defineEmits(['submit-success'])
 
 const formRef = ref()
-const form = reactive({
+const formData = reactive({
   position_name: '',
   department: '',
   responsibilities: '',
@@ -61,12 +61,22 @@ const rules = {
   requirements: [{ required: true, message: '任职要求不能为空', trigger: 'blur' }]
 }
 
-const submitForm = async () => {
+const handleSubmit = async () => {
   if (!formRef.value) return
-  await formRef.value.validate((valid) => {
-    if (valid) {
-      emit('submit-success', form)
-    }
-  })
+  
+  try {
+    await formRef.value.validate()
+    const data = {...formData}
+    emit('submit-success', data)
+  } catch (error) {
+    ElMessage.error('表单验证失败，请检查必填项')
+  }
 }
+
+defineExpose({
+  formData,
+  handleSubmit
+})
+
+
 </script>

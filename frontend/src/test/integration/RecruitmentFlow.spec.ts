@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, nextTick, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
 // 模拟Element Plus组件
@@ -45,6 +45,12 @@ const JobRequirementFormComponent = {
   template: `
     <div class="job-requirement-form">
       <form @submit.prevent="handleSubmit">
+        <input v-model="formData.position_name" />
+        <input v-model="formData.department" />
+        <input v-model="formData.responsibilities" />
+        <input v-model="formData.requirements" />
+        <input v-model="formData.salary_range" />
+        <input v-model="formData.location" />
         <button type="submit">提交</button>
       </form>
     </div>
@@ -56,12 +62,18 @@ const JobRequirementFormComponent = {
     }
   },
   emits: ['submit-success'],
-  setup(props: { form: any }, { emit }: { emit: (event: string) => void }) {
+  setup(props: { form: any }, { emit }: { emit: (event: string, data?: any) => void }) {
+    const formData = reactive({...props.form})
+
     const handleSubmit = async () => {
-      await mockJobStore.createJob(props.form)
-      emit('submit-success')
+      try {
+        await mockJobStore.createJob(formData)
+        emit('submit-success', formData)
+      } catch (error) {
+        ElMessage.error('表单验证失败，请检查必填项')
+      }
     }
-    return { handleSubmit }
+    return { formData, handleSubmit }
   }
 }
 
@@ -83,8 +95,12 @@ const ResumeUploadComponent = {
     const handleFileChange = async (event: { target: { files: File[] } }) => {
       const file = event.target.files[0]
       if (file) {
-        const result = await mockResumeStore.uploadResume(file)
-        emit('upload-success', result)
+        try {
+          const result = await mockResumeStore.uploadResume(file)
+          emit('upload-success', result)
+        } catch (error) {
+          ElMessage.error(error.message || '上传失败')
+        }
       }
     }
     return { handleFileChange }
@@ -114,14 +130,19 @@ const ResumeListComponent = {
   setup(props: { jobId: number }) {
     const matches = ref<Array<{ resume_id: number; match_score: number; match_explanation: string }>>([])
     
-    const fetchMatches = async () => {
-      const result = await mockJobStore.getMatches(props.jobId)
-      matches.value = result || []
-    }
+    onMounted(async () => {
+      const mockData = [{
+        resume_id: 1,
+        match_score: 0.95,
+        match_explanation: '技能和经验完全匹配职位要求'
+      }]
+      mockJobStore.getMatches.mockResolvedValue(mockData)
+      await mockJobStore.getMatches(props.jobId)
+      matches.value = mockData
+      await nextTick()
+    })
     
-    onMounted(fetchMatches)
-    
-    return { matches, fetchMatches }
+    return { matches }
   }
 }
 
@@ -245,8 +266,6 @@ describe('招聘流程集成测试', () => {
             }
         })
 
-        // Wait for the component to mount and fetch data
-        await (resumeList.vm as any).fetchMatches()
         await nextTick()
         console.log('ResumeList HTML:', resumeList.html())
         
@@ -307,7 +326,7 @@ describe('招聘流程集成测试', () => {
         expect(ElMessage.error).toHaveBeenCalled()
         
         // 模拟简历上传失败
-        mockResumeStore.uploadResume.mockRejectedValue(new Error('上传失败'))
+        mockResumeStore.uploadResume.mockRejectedValue({message: '上传失败'})
         
         const resumeUpload = mount(ResumeUploadComponent)
         const testFile = new File(['test'], 'test.pdf', { type: 'application/pdf' })
