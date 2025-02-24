@@ -15,7 +15,9 @@
       :disabled="isUploading"
     >
       <template #trigger>
-        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <el-icon class="el-icon--upload">
+          <upload-filled />
+        </el-icon>
         <div class="el-upload__text">
           将文件拖到此处或 <em>点击上传</em>
         </div>
@@ -34,7 +36,10 @@
       :status="uploadStatus"
     />
 
-    <div v-if="lastUploadedResume" class="upload-result">
+    <div
+      v-if="lastUploadedResume"
+      class="upload-result"
+    >
       <el-alert
         title="简历上传成功"
         type="success"
@@ -60,7 +65,7 @@
 import { ref } from 'vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import type { UploadProps, UploadInstance } from 'element-plus'
+import type { UploadProps } from 'element-plus'
 import type { Resume } from '@/types'
 import { useResumeStore } from '@/store/resume'
 
