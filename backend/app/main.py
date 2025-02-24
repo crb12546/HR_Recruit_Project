@@ -2,8 +2,8 @@
 from fastapi import FastAPI, Depends, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from .database import get_db
-from .routers import resumes, jobs, interviews
+from app.database import get_db
+from app.routers import resumes, jobs, interviews
 
 app = FastAPI(
     title="智能招聘系统",
