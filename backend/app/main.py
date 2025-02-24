@@ -1,15 +1,17 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
-from .database import get_db
-from .routers import resumes, jobs, interviews
+"""主应用程序"""
+from fastapi import FastAPI
+from app.routers import jobs, resumes, interviews
+from app.routers.onboarding import router as onboarding_router
 
-app = FastAPI(title="HR Recruitment System")
+app = FastAPI(title="智能招聘系统")
 
-# Include API routers
-app.include_router(resumes.router, prefix="/api/v1")
-app.include_router(jobs.router, prefix="/api/v1")
-app.include_router(interviews.router, prefix="/api/v1")
+# 注册路由
+app.include_router(jobs.router)
+app.include_router(resumes.router)
+app.include_router(interviews.router)
+app.include_router(onboarding_router)
 
-@app.get("/health")
-def health_check(db: Session = Depends(get_db)):
+@app.get("/api/v1/health")
+async def health_check():
+    """健康检查"""
     return {"status": "healthy"}
