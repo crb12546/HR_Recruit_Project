@@ -5,7 +5,7 @@ import { ElMessage } from 'element-plus'
 import ResumeUpload from '@/components/resume/ResumeUpload.vue'
 import type { ComponentPublicInstance } from 'vue'
 
-type ResumeUploadInstance = ComponentPublicInstance & {
+interface ResumeUploadInstance extends ComponentPublicInstance {
   handleBeforeUpload: (file: File) => Promise<boolean>
   handleSuccess: (resume: any) => Promise<void>
   handleError: (error: Error) => Promise<void>
@@ -44,14 +44,14 @@ describe('简历上传组件', () => {
     
     // Create mock methods
     const mockMethods = {
-      handleBeforeUpload: vi.fn().mockImplementation(async (_file: File) => {
+      handleBeforeUpload: vi.fn().mockImplementation(async (_file: File): Promise<boolean> => {
         ElMessage.error('不支持的文件格式')
         return false
       }),
-      handleSuccess: vi.fn().mockImplementation(async (_resume: any) => {
+      handleSuccess: vi.fn().mockImplementation(async (_resume: any): Promise<void> => {
         ElMessage.success('简历上传成功')
       }),
-      handleError: vi.fn().mockImplementation(async (_error: Error) => {
+      handleError: vi.fn().mockImplementation(async (_error: Error): Promise<void> => {
         ElMessage.error(`上传失败: ${_error.message}`)
       })
     }
@@ -63,7 +63,7 @@ describe('简历上传组件', () => {
   }
 
   it('应该在上传前验证文件类型', async () => {
-    const { wrapper, mockMethods } = mountUpload()
+    const { mockMethods } = mountUpload()
     const invalidFile = new File(['test'], 'test.exe', { type: 'application/x-msdownload' })
     
     const result = await mockMethods.handleBeforeUpload(invalidFile)
@@ -72,7 +72,7 @@ describe('简历上传组件', () => {
   })
 
   it('应该正确处理上传成功', async () => {
-    const { wrapper, mockMethods } = mountUpload()
+    const { mockMethods } = mountUpload()
     const mockResume = {
       id: 1,
       candidate_name: '张三',
@@ -86,7 +86,7 @@ describe('简历上传组件', () => {
   })
 
   it('应该正确处理上传失败', async () => {
-    const { wrapper, mockMethods } = mountUpload()
+    const { mockMethods } = mountUpload()
     const error = new Error('上传失败')
     
     await mockMethods.handleError(error)
