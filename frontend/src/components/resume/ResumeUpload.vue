@@ -1,5 +1,9 @@
 <template>
   <div class="resume-upload">
+    <div class="upload-header">
+      <h3>简历上传</h3>
+      <p class="upload-description">支持单个或批量上传简历文件，系统将自动提取简历内容并生成人才画像</p>
+    </div>
     <el-upload
       class="upload-area"
       drag
@@ -10,8 +14,9 @@
       :on-error="handleError"
       :on-progress="handleProgress"
       :on-exceed="handleExceed"
-      :limit="1"
-      accept=".pdf,.doc,.docx,.txt"
+      :limit="5"
+      accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
+      multiple
       :disabled="isUploading"
     >
       <template #trigger>
@@ -25,16 +30,22 @@
       
       <template #tip>
         <div class="el-upload__tip">
-          支持 PDF、Word、TXT 格式，文件大小不超过100MB
+          支持 PDF、Word、Excel、TXT 格式，文件大小不超过100MB，可批量上传（最多5个文件）
         </div>
       </template>
     </el-upload>
 
-    <el-progress 
-      v-if="isUploading" 
-      :percentage="uploadProgress" 
-      :status="uploadStatus"
-    />
+    <div v-if="isUploading" class="upload-progress">
+      <el-progress 
+        :percentage="uploadProgress" 
+        :status="uploadStatus"
+      >
+        <template #default="{ percentage }">
+          <span class="progress-text">{{ percentage }}%</span>
+        </template>
+      </el-progress>
+      <p class="progress-tip">正在处理文件，请稍候...</p>
+    </div>
 
     <div
       v-if="lastUploadedResume"
@@ -43,20 +54,37 @@
       <el-alert
         title="简历上传成功"
         type="success"
-        :description="lastUploadedResume.talent_portrait"
         show-icon
         :closable="false"
-      />
-      <div class="resume-tags">
-        <el-tag 
-          v-for="tag in lastUploadedResume.tags" 
-          :key="tag.id"
-          class="mx-1"
-          type="info"
-        >
-          {{ tag.name }}
-        </el-tag>
-      </div>
+      >
+        <template #description>
+          <div class="resume-content">
+            <div class="talent-portrait">
+              <h4>人才画像</h4>
+              <p>{{ lastUploadedResume.talent_portrait }}</p>
+            </div>
+            <div class="ocr-content">
+              <h4>简历内容</h4>
+              <el-scrollbar height="200px">
+                <p class="text-content">{{ lastUploadedResume.ocr_content }}</p>
+              </el-scrollbar>
+            </div>
+            <div class="resume-tags">
+              <h4>技能标签</h4>
+              <div class="tags-container">
+                <el-tag 
+                  v-for="tag in lastUploadedResume.tags" 
+                  :key="tag.id"
+                  class="mx-1"
+                  type="info"
+                >
+                  {{ tag.name }}
+                </el-tag>
+              </div>
+            </div>
+          </div>
+        </template>
+      </el-alert>
     </div>
   </div>
 </template>
@@ -139,7 +167,7 @@ const handleError: UploadProps['onError'] = (error) => {
 
 // 超出文件数量限制
 const handleExceed: UploadProps['onExceed'] = () => {
-  ElMessage.warning('一次只能上传一个文件')
+  ElMessage.warning('一次最多上传5个文件')
 }
 </script>
 
@@ -190,14 +218,71 @@ const handleExceed: UploadProps['onExceed'] = () => {
   margin-top: 20px;
 }
 
+.upload-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.upload-header h3 {
+  font-size: 24px;
+  color: var(--el-text-color-primary);
+  margin-bottom: 8px;
+}
+
+.upload-description {
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+}
+
+.resume-content {
+  padding: 16px;
+}
+
+.talent-portrait,
+.ocr-content,
 .resume-tags {
-  margin-top: 12px;
+  margin-bottom: 20px;
+}
+
+.talent-portrait h4,
+.ocr-content h4,
+.resume-tags h4 {
+  font-size: 16px;
+  color: var(--el-text-color-primary);
+  margin-bottom: 8px;
+}
+
+.text-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--el-text-color-regular);
+  white-space: pre-wrap;
+}
+
+.tags-container {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.el-progress {
+.upload-progress {
   margin-top: 16px;
+  text-align: center;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: var(--el-color-primary);
+}
+
+.progress-tip {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+.el-progress {
+  margin: 0 auto;
+  max-width: 400px;
 }
 </style>
