@@ -1,0 +1,104 @@
+{
+    "candidate_id": "AI001",
+    "name": "林智远",
+    "age": 28,
+    "contact": {
+        "phone": "135xxxx2345",
+        "email": "linzy@example.com",
+        "location": "北京市海淀区"
+    },
+    "education": [
+        {
+            "university": "中国科学院大学",
+            "major": "人工智能",
+            "degree": "硕士",
+            "graduation_year": 2021,
+            "gpa": "3.9/4.0",
+            "research": "深度学习，计算机视觉"
+        },
+        {
+            "university": "北京航空航天大学",
+            "major": "计算机科学与技术",
+            "degree": "本科",
+            "graduation_year": 2018,
+            "gpa": "3.8/4.0"
+        }
+    ],
+    "work_experience": [
+        {
+            "company": "商汤科技",
+            "position": "AI算法工程师",
+            "period": "2021-至今",
+            "achievements": [
+                "负责计算机视觉算法研发",
+                "开发目标检测和图像分割模型",
+                "优化深度学习模型性能",
+                "指导初级算法工程师"
+            ]
+        },
+        {
+            "company": "百度",
+            "position": "算法实习生",
+            "period": "2020-2021",
+            "achievements": [
+                "参与自然语言处理项目",
+                "实现BERT模型fine-tuning",
+                "开发文本分类算法"
+            ]
+        }
+    ],
+    "skills": {
+        "programming": ["Python", "C++"],
+        "deep_learning": ["PyTorch", "TensorFlow"],
+        "machine_learning": ["scikit-learn", "XGBoost"],
+        "computer_vision": ["OpenCV", "MMDetection"],
+        "nlp": ["Transformers", "NLTK"],
+        "tools": ["Git", "Docker", "Linux"]
+    },
+    "research": {
+        "publications": [
+            {
+                "conference": "CVPR",
+                "count": 1
+            },
+            {
+                "conference": "ICCV",
+                "count": 1
+            }
+        ],
+        "patents": {
+            "field": "计算机视觉",
+            "count": 2
+        },
+        "open_source": {
+            "stars": "1000+"
+        }
+    },
+    "projects": [
+        {
+            "name": "多模态商品识别系统",
+            "period": "2022-2023",
+            "achievements": [
+                "设计实现商品检测算法",
+                "开发多模态特征融合模型",
+                "优化模型推理性能",
+                "准确率提升15%"
+            ]
+        },
+        {
+            "name": "行人重识别系统",
+            "period": "2021-2022",
+            "achievements": [
+                "开发行人检测和跟踪算法",
+                "实现特征提取网络",
+                "优化模型训练流程",
+                "部署模型到边缘设备"
+            ]
+        }
+    ],
+    "certifications": [
+        "深度学习专业证书（Coursera）",
+        "NVIDIA深度学习认证",
+        "华为AI开发者认证"
+    ]
+}

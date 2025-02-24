@@ -1,0 +1,8 @@
+工作经验：3年
+技能：Python, PyTorch, TensorFlow, scikit-learn, XGBoost, OpenCV, MMDetection, Transformers, NLTK, Git, Docker, Linux
+教育背景：中国科学院大学 人工智能 硕士, 北京航空航天大学 计算机科学与技术 本科
+工作单位：商汤科技, 百度
+职位：AI算法工程师, 算法实习生
+研究成果：CVPR论文1篇, ICCV论文1篇, 计算机视觉专利2项
+项目：多模态商品识别系统, 行人重识别系统
+证书：深度学习专业证书(Coursera), NVIDIA深度学习认证, 华为AI开发者认证

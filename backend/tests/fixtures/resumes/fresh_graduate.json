@@ -1,0 +1,90 @@
+{
+    "candidate_id": "FG001",
+    "name": "刘思远",
+    "age": 23,
+    "contact": {
+        "phone": "132xxxx7890",
+        "email": "liusy@example.com",
+        "location": "北京市海淀区"
+    },
+    "education": {
+        "university": "北京理工大学",
+        "major": "计算机科学与技术",
+        "degree": "本科",
+        "graduation_year": 2024,
+        "gpa": "3.8/4.0",
+        "ranking": "专业前5%",
+        "core_courses": [
+            "数据结构",
+            "算法分析",
+            "操作系统",
+            "计算机网络",
+            "数据库系统",
+            "Python程序设计"
+        ]
+    },
+    "internships": [
+        {
+            "company": "字节跳动",
+            "position": "后端开发实习生",
+            "period": "2023.07-2023.09",
+            "achievements": [
+                "参与抖音后端服务开发，使用Python和FastAPI",
+                "开发用户行为数据分析模块",
+                "编写单元测试，提升代码覆盖率"
+            ]
+        },
+        {
+            "company": "美团",
+            "position": "Python开发实习生",
+            "period": "2023.03-2023.06",
+            "achievements": [
+                "参与外卖配送系统后端开发",
+                "实现配送路径优化算法",
+                "编写技术文档和接口文档"
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "name": "校园二手交易平台",
+            "year": 2023,
+            "role": "独立开发者",
+            "achievements": [
+                "独立完成后端开发，使用Python和FastAPI",
+                "实现用户认证、商品管理、订单处理等功能",
+                "使用Redis实现商品缓存，提升访问速度",
+                "GitHub获得50+星标"
+            ]
+        },
+        {
+            "name": "智能图书管理系统",
+            "year": 2022,
+            "role": "项目负责人",
+            "achievements": [
+                "团队项目负责人，带领4人团队",
+                "使用Python开发后端API",
+                "实现图书借还、库存管理等功能",
+                "获得校级优秀项目奖"
+            ]
+        }
+    ],
+    "skills": {
+        "programming_languages": ["Python", "Java", "C++"],
+        "frameworks": ["FastAPI", "Django", "Flask"],
+        "databases": ["MySQL", "Redis", "MongoDB"],
+        "tools": ["Git", "Docker", "Linux"]
+    },
+    "awards": [
+        "2023年全国大学生软件创新大赛二等奖",
+        "2023年校级优秀学生",
+        "2022年美团黑客马拉松最佳创意奖",
+        "2022年校级编程竞赛一等奖"
+    ],
+    "certifications": [
+        {
+            "name": "CET-6",
+            "score": "580"
+        }
+    ]
+}
