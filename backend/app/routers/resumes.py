@@ -11,7 +11,7 @@ from app.services.gpt import GPTService
 from app.services.tag import TagService
 from app.services.storage import StorageService
 
-router = APIRouter(prefix="/api/v1/resumes", tags=["resumes"])
+router = APIRouter()
 
 @router.post("/upload")
 async def upload_resume(
@@ -110,32 +110,24 @@ async def upload_resume(
         )
 
 @router.post("/{resume_id}/parse")
-async def parse_resume(
+def parse_resume(
     resume_id: int,
     db: Session = Depends(get_db)
 ):
     """解析简历内容"""
-    try:
-        resume = db.query(Resume).filter(Resume.id == resume_id).first()
-        if not resume:
-            raise HTTPException(status_code=404, detail="简历不存在")
-            
-        # 初始化服务
-        gpt_service = GPTService()
-        tag_service = TagService(db)
+    resume = db.query(Resume).filter(Resume.id == resume_id).first()
+    if not resume:
+        raise HTTPException(status_code=404, detail="简历不存在")
         
-        # 生成标签
-        tags = tag_service.generate_resume_tags(resume)
-        
-        # 更新简历
-        resume.tags = [Tag(**tag) for tag in tags]
-        db.commit()
-        db.refresh(resume)
-        
-        return resume.to_dict()
-        
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"简历解析失败: {str(e)}"
-        )
+    # 初始化服务
+    gpt_service = GPTService()
+    
+    # 提取标签
+    tags = gpt_service.extract_resume_tags(resume.ocr_content)
+    
+    # 更新简历标签
+    resume.tags = [Tag(name=tag["name"], category=tag.get("category")) for tag in tags]
+    db.commit()
+    db.refresh(resume)
+    
+    return resume.to_dict()
