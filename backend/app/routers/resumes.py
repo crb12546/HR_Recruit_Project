@@ -1,15 +1,17 @@
-"""简历上传路由"""
+"""简历上传和匹配路由"""
 import os
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from app.database import get_db
 from app.models.resume import Resume
 from app.models.tag import Tag
+from app.models.job_requirement import JobRequirement
 from app.services.ocr import OCRService
 from app.services.gpt import GPTService
 from app.services.tag import TagService
 from app.services.storage import StorageService
+from app.services.matching import MatchingService
 
 router = APIRouter()
 
@@ -131,3 +133,74 @@ def parse_resume(
     db.refresh(resume)
     
     return resume.to_dict()
+
+@router.post("/{resume_id}/match/{job_id}")
+def match_resume_with_job(
+    resume_id: int,
+    job_id: int,
+    db: Session = Depends(get_db)
+):
+    """将简历与职位需求进行匹配"""
+    # 获取简历和职位需求
+    resume = db.query(Resume).filter(Resume.id == resume_id).first()
+    job = db.query(JobRequirement).filter(JobRequirement.id == job_id).first()
+    
+    if not resume:
+        raise HTTPException(status_code=404, detail="简历不存在")
+    if not job:
+        raise HTTPException(status_code=404, detail="职位需求不存在")
+    
+    # 初始化匹配服务
+    matching_service = MatchingService()
+    
+    # 计算匹配度
+    match_result = matching_service.calculate_match(
+        resume=resume,
+        job_requirement=job
+    )
+    
+    return {
+        "resume_id": resume_id,
+        "job_id": job_id,
+        "match_score": match_result.score,
+        "match_details": match_result.details,
+        "recommendations": match_result.recommendations
+    }
+
+@router.get("/match/{job_id}")
+def get_matching_resumes(
+    job_id: int,
+    min_score: Optional[float] = Query(0.0, ge=0.0, le=100.0),
+    limit: Optional[int] = Query(10, ge=1, le=100),
+    db: Session = Depends(get_db)
+):
+    """获取与职位需求匹配度最高的简历列表"""
+    # 获取职位需求
+    job = db.query(JobRequirement).filter(JobRequirement.id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="职位需求不存在")
+    
+    # 获取所有简历
+    resumes = db.query(Resume).all()
+    
+    # 初始化匹配服务
+    matching_service = MatchingService()
+    
+    # 计算所有简历的匹配度
+    matches = []
+    for resume in resumes:
+        match_result = matching_service.calculate_match(
+            resume=resume,
+            job_requirement=job
+        )
+        if match_result.score >= min_score:
+            matches.append({
+                "resume": resume.to_dict(),
+                "score": match_result.score,
+                "details": match_result.details,
+                "recommendations": match_result.recommendations
+            })
+    
+    # 按匹配度排序并返回前N个结果
+    matches.sort(key=lambda x: x["score"], reverse=True)
+    return matches[:limit]
