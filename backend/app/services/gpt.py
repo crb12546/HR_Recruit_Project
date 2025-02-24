@@ -38,7 +38,7 @@ class GPTService:
                 ]
             )
             
-            return response.choices[0].message.content if response.choices else "" if response.choices else ""
+            return response.choices[0].message.content if response and response.choices else ""
             
         except Exception as e:
             logger.error(f"GPT提取姓名失败: {str(e)}")
@@ -70,7 +70,7 @@ class GPTService:
                 ]
             )
             
-            return response.choices[0].message.content if response.choices else "" if response.choices else ""
+            return response.choices[0].message.content if response and response.choices else ""
             
         except Exception as e:
             logger.error(f"GPT生成画像失败: {str(e)}")
