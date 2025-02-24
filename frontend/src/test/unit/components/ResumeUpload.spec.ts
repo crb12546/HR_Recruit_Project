@@ -59,7 +59,8 @@ describe('简历上传组件', () => {
     // Assign mock methods to component instance
     Object.assign(vm, mockMethods)
     
-    return { wrapper, mockMethods }
+    const uploadWrapper = { wrapper, mockMethods }
+    return uploadWrapper
   }
 
   it('应该在上传前验证文件类型', async () => {
