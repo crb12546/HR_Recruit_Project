@@ -1,12 +1,14 @@
-from sqlalchemy.orm import declarative_base, registry
+"""Models package"""
+# Import Base and BaseModel from database.py
+from ..database import Base
+from .base import BaseModel
 
-mapper_registry = registry()
-Base = mapper_registry.generate_base()
+# Import models in dependency order
+from .tag import Tag  # No dependencies
+from .user import User  # No dependencies
+from .resume import Resume  # Depends on Tag
+from .job_requirement import JobRequirement  # No model dependencies
+from .interview import Interview  # Depends on Resume, JobRequirement, User
+from .associations import resume_tags  # Association tables
 
-# Import all models to ensure they're registered with Base
-from .job_requirement import JobRequirement
-from .resume import Resume
-from .interview import Interview
-from .user import User
-
-__all__ = ['Base', 'JobRequirement', 'Resume', 'Interview', 'User']
+__all__ = ['Base', 'BaseModel', 'Tag', 'User', 'Resume', 'JobRequirement', 'Interview']

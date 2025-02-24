@@ -6,7 +6,14 @@ from sqlalchemy.pool import StaticPool
 
 from app.database import Base, get_db
 from app.main import app
-from app.models import JobRequirement, Resume, Interview, User
+
+# Import models in dependency order
+from app.models.tag import Tag
+from app.models.user import User
+from app.models.resume import Resume
+from app.models.job_requirement import JobRequirement
+from app.models.interview import Interview
+from app.models.associations import resume_tags
 
 SQLALCHEMY_TEST_DATABASE_URL = "sqlite:///:memory:"
 

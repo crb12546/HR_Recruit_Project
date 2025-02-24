@@ -14,7 +14,7 @@ def test_resume_upload(client, mocker):
     mock_gpt.return_value = "具有5年Python开发经验的后端工程师，擅长FastAPI框架"
     
     # Test file upload
-    with open('tests/fixtures/test_resume.pdf', 'rb') as f:
+    with open('tests/fixtures/test_resume.txt', 'rb') as f:
         response = client.post(
             "/api/v1/resumes/upload",
             files={"file": ("test_resume.pdf", f, "application/pdf")}

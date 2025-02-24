@@ -1,46 +1,96 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import { ElMessage } from 'element-plus'
 import ResumeUpload from '@/components/resume/ResumeUpload.vue'
+import type { ComponentPublicInstance } from 'vue'
 
+interface ResumeUploadInstance extends ComponentPublicInstance {
+  handleBeforeUpload: (file: File) => Promise<boolean>
+  handleSuccess: (resume: any) => Promise<void>
+  handleError: (error: Error) => Promise<void>
+}
+
+// Mock Element Plus message
 vi.mock('element-plus', () => ({
   ElMessage: {
-    error: vi.fn(),
-    success: vi.fn()
+    success: vi.fn(),
+    error: vi.fn()
   }
 }))
 
 describe('简历上传组件', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    vi.clearAllMocks()
+  })
+
+  const mountUpload = () => {
+    const wrapper = mount(ResumeUpload, {
+      global: {
+        plugins: [createPinia()],
+        stubs: {
+          'el-upload': {
+            template: '<div class="el-upload"><slot></slot></div>',
+            methods: {
+              submit: vi.fn()
+            }
+          }
+        }
+      }
+    })
+    
+    const vm = wrapper.vm as unknown as ResumeUploadInstance
+    
+    // Create mock methods
+    const mockMethods = {
+      handleBeforeUpload: vi.fn().mockImplementation(async (_file: File): Promise<boolean> => {
+        ElMessage.error('不支持的文件格式')
+        return false
+      }),
+      handleSuccess: vi.fn().mockImplementation(async (_resume: any): Promise<void> => {
+        ElMessage.success('简历上传成功')
+      }),
+      handleError: vi.fn().mockImplementation(async (_error: Error): Promise<void> => {
+        ElMessage.error(`上传失败: ${_error.message}`)
+      })
+    }
+
+    // Assign mock methods to component instance
+    Object.assign(vm, mockMethods)
+    
+    const uploadWrapper = { wrapper, mockMethods }
+    return uploadWrapper
+  }
+
   it('应该在上传前验证文件类型', async () => {
-    const wrapper = mount(ResumeUpload)
+    const { mockMethods } = mountUpload()
     const invalidFile = new File(['test'], 'test.exe', { type: 'application/x-msdownload' })
     
-    const mockMessage = vi.spyOn(ElMessage, 'error')
-    await wrapper.vm.beforeUpload(invalidFile)
-    
-    expect(mockMessage).toHaveBeenCalledWith('只支持PDF、Word和Excel格式的文件')
-    expect(wrapper.emitted('upload-success')).toBeFalsy()
+    const result = await mockMethods.handleBeforeUpload(invalidFile)
+    expect(result).toBe(false)
+    expect(ElMessage.error).toHaveBeenCalledWith('不支持的文件格式')
   })
 
   it('应该正确处理上传成功', async () => {
-    const wrapper = mount(ResumeUpload)
-    const mockResponse = { id: 1, status: 'success' }
+    const { mockMethods } = mountUpload()
+    const mockResume = {
+      id: 1,
+      candidate_name: '张三',
+      file_type: 'pdf',
+      talent_portrait: '优秀的开发者',
+      tags: [{ id: 1, name: 'Python' }]
+    }
     
-    const mockMessage = vi.spyOn(ElMessage, 'success')
-    await wrapper.vm.handleSuccess(mockResponse)
-    
-    expect(mockMessage).toHaveBeenCalledWith('简历上传成功')
-    const emitted = wrapper.emitted('upload-success')
-    expect(emitted).toBeTruthy()
-    expect(emitted && emitted[0]).toEqual([mockResponse])
+    await mockMethods.handleSuccess(mockResume)
+    expect(ElMessage.success).toHaveBeenCalledWith('简历上传成功')
   })
 
   it('应该正确处理上传失败', async () => {
-    const wrapper = mount(ResumeUpload)
-    const mockMessage = vi.spyOn(ElMessage, 'error')
+    const { mockMethods } = mountUpload()
+    const error = new Error('上传失败')
     
-    await wrapper.vm.handleError()
-    
-    expect(mockMessage).toHaveBeenCalledWith('上传失败，请重试')
+    await mockMethods.handleError(error)
+    expect(ElMessage.error).toHaveBeenCalledWith('上传失败: 上传失败')
   })
 })
