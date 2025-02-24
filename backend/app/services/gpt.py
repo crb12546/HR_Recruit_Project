@@ -209,3 +209,36 @@ class GPTService:
                     "匹配分析过程出现错误，请稍后重试"
                 ]
             }
+
+    def generate_interview_questions(self, prompt: str) -> List[Dict[str, str]]:
+        """生成面试问题"""
+        if os.getenv("ENV") == "test":
+            return [
+                {
+                    "question": "请描述一下你在上一个项目中遇到的最大挑战？",
+                    "type": "软实力",
+                    "purpose": "考察问题解决能力和压力处理"
+                },
+                {
+                    "question": "如何设计一个高并发的分布式系统？",
+                    "type": "技术",
+                    "purpose": "考察系统设计能力"
+                }
+            ]
+            
+        try:
+            response: ChatCompletion = self.client.chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "你是一个专业的面试官"},
+                    {"role": "user", "content": prompt}
+                ]
+            )
+            
+            content = response.choices[0].message.content if response and response.choices else "[]"
+            questions = json.loads(content)
+            return questions
+            
+        except Exception as e:
+            logger.error(f"GPT生成面试问题失败: {str(e)}")
+            return []
