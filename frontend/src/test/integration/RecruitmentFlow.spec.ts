@@ -58,8 +58,14 @@ const JobRequirementFormComponent = {
   emits: ['submit-success'],
   setup(props: { form: any }, { emit }: { emit: (event: string) => void }) {
     const handleSubmit = async () => {
-      await mockJobStore.createJob(props.form)
-      emit('submit-success')
+      try {
+        await mockJobStore.createJob(props.form)
+        emit('submit-success')
+      } catch (error) {
+        if (error instanceof Error) {
+          ElMessage.error(error.message)
+        }
+      }
     }
     return { handleSubmit }
   }
@@ -83,8 +89,14 @@ const ResumeUploadComponent = {
     const handleFileChange = async (event: { target: { files: File[] } }) => {
       const file = event.target.files[0]
       if (file) {
-        const result = await mockResumeStore.uploadResume(file)
-        emit('upload-success', result)
+        try {
+          const result = await mockResumeStore.uploadResume(file)
+          emit('upload-success', result)
+        } catch (error) {
+          if (error instanceof Error) {
+            ElMessage.error(error.message)
+          }
+        }
       }
     }
     return { handleFileChange }
@@ -165,6 +177,9 @@ vi.mock('@/components/interview/InterviewSchedule.vue', () => ({
 describe('招聘流程集成测试', () => {
 
     it('应该完成从发布职位到安排面试的完整流程', async () => {
+        // 重置所有mock
+        vi.clearAllMocks()
+        
         // 第一步：创建招聘需求
         // 准备测试数据
         const jobData = {
@@ -176,7 +191,14 @@ describe('招聘流程集成测试', () => {
             location: '上海'
         }
         
-        mockJobStore.createJob.mockResolvedValue({ id: 1, ...jobData })
+        const matchResult = [{
+            resume_id: 1,
+            match_score: 0.95,
+            match_explanation: '技能和经验完全匹配职位要求'
+        }]
+        
+        mockJobStore.createJob.mockResolvedValueOnce({ id: 1, ...jobData })
+        mockJobStore.getMatches.mockResolvedValueOnce(matchResult)
 
         const wrapper = mount(JobRequirementFormComponent, {
             props: {
@@ -246,8 +268,11 @@ describe('招聘流程集成测试', () => {
         })
 
         // Wait for the component to mount and fetch data
-        await (resumeList.vm as any).fetchMatches()
         await nextTick()
+        // Wait for the async operation to complete
+        await new Promise(resolve => setTimeout(resolve, 0))
+        await nextTick()
+        
         console.log('ResumeList HTML:', resumeList.html())
         
         const matchItems = resumeList.findAll('.match-item')
@@ -292,30 +317,53 @@ describe('招聘流程集成测试', () => {
     })
     
     it('应该正确处理错误情况', async () => {
+        // 重置所有mock
+        vi.clearAllMocks()
+        
         // 模拟创建职位失败
-        mockJobStore.createJob.mockRejectedValue(new Error('创建失败'))
+        const errorMessage = '创建失败'
+        mockJobStore.createJob.mockImplementationOnce(() => {
+            throw new Error(errorMessage)
+        })
         
         const wrapper = mount(JobRequirementFormComponent, {
             props: {
                 form: {
-                    position_name: 'Python高级工程师'
+                    position_name: 'Python高级工程师',
+                    department: '技术部',
+                    responsibilities: '负责后端微服务架构设计和开发',
+                    requirements: '1. 精通Python开发，5年以上经验',
+                    salary_range: '35k-50k',
+                    location: '上海'
                 }
             }
         })
         
+        // 触发表单提交
         await wrapper.find('form').trigger('submit')
-        expect(ElMessage.error).toHaveBeenCalled()
+        await wrapper.vm.$nextTick()
+        
+        // 验证错误处理
+        expect(mockJobStore.createJob).toHaveBeenCalled()
+        expect(ElMessage.error).toHaveBeenCalledWith(errorMessage)
         
         // 模拟简历上传失败
-        mockResumeStore.uploadResume.mockRejectedValue(new Error('上传失败'))
+        const uploadErrorMessage = '上传失败'
+        mockResumeStore.uploadResume.mockImplementationOnce(() => {
+            throw new Error(uploadErrorMessage)
+        })
         
         const resumeUpload = mount(ResumeUploadComponent)
         const testFile = new File(['test'], 'test.pdf', { type: 'application/pdf' })
         
+        // 触发文件上传
         await (resumeUpload.vm as any).handleFileChange({
             target: { files: [testFile] }
         })
+        await resumeUpload.vm.$nextTick()
         
-        expect(ElMessage.error).toHaveBeenCalled()
+        // 验证错误处理
+        expect(mockResumeStore.uploadResume).toHaveBeenCalled()
+        expect(ElMessage.error).toHaveBeenCalledWith(uploadErrorMessage)
     })
 })
