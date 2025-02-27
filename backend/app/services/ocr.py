@@ -1,59 +1,82 @@
-"""阿里云OCR服务"""
 import os
-import base64
 import json
-from aliyunsdkcore.client import AcsClient
-from aliyunsdkcore.acs_exception.exceptions import ClientException, ServerException
-from aliyunsdkocr.request.v20191230.RecognizeGeneralRequest import RecognizeGeneralRequest
+import base64
+import logging
+from typing import Optional
+
+# 根据环境变量决定是否使用模拟实现
+if os.getenv("TESTING", "False").lower() == "true":
+    from app.services.ocr_mock import Client, RecognizeGeneralRequest
+else:
+    try:
+        from aliyunsdkcore.client import AcsClient as Client
+        from aliyunsdkocr.request.v20191230.RecognizeGeneralRequest import RecognizeGeneralRequest
+    except ImportError:
+        # 如果无法导入，使用模拟实现
+        from app.services.ocr_mock import Client, RecognizeGeneralRequest
+
+logger = logging.getLogger(__name__)
 
 class OCRService:
-    """阿里云OCR服务实现"""
-    
     def __init__(self):
-        self.env = os.getenv("ENV", "test")
-        if self.env == "test":
-            self.mock = True
-        else:
-            self.mock = False
-            self.access_key_id = os.getenv("ALIYUN_ACCESS_KEY_ID")
-            self.access_key_secret = os.getenv("ALIYUN_ACCESS_KEY_SECRET")
-            self.region_id = os.getenv("ALIYUN_REGION_ID", "cn-shanghai")
-            
-            # 初始化ACS客户端
-            self.client = AcsClient(
-                self.access_key_id,
-                self.access_key_secret,
-                self.region_id
-            )
+        self.client = Client(
+            os.getenv("ALIYUN_REGION_ID", "cn-shanghai"),
+            os.getenv("ALIYUN_ACCESS_KEY", "test_access_key"),
+            os.getenv("ALIYUN_ACCESS_SECRET", "test_access_secret")
+        )
     
-    def extract_text(self, file_content: bytes) -> str:
-        """从文件内容中提取文本"""
+    async def extract_text_from_url(self, file_url: str) -> Optional[str]:
+        """
+        从文件URL中提取文本内容
+        
+        Args:
+            file_url: 文件的URL地址
+            
+        Returns:
+            提取的文本内容，如果失败则返回None
+        """
         try:
-            if self.mock:
-                # 测试环境使用模拟数据
-                return "工作经验：5年\n技能：Python, FastAPI\n教育背景：计算机科学学士"
-                
-            # 将文件内容转换为Base64编码
-            encoded_content = base64.b64encode(file_content).decode('utf-8')
-            
-            # 创建OCR请求
             request = RecognizeGeneralRequest()
-            request.set_accept_format('json')
+            request.set_Url(file_url)
             
-            # 设置请求参数
-            request.set_ImageURL(encoded_content)
-            
-            # 发送请求
+            # 调用阿里云OCR服务
             response = self.client.do_action_with_exception(request)
-            response_json = json.loads(response.decode('utf-8'))
+            response_json = json.loads(response)
             
             # 提取文本内容
-            if 'Data' in response_json and 'Content' in response_json['Data']:
-                return response_json['Data']['Content']
-            else:
-                raise Exception("OCR识别失败：无法提取文本内容")
-                
-        except (ClientException, ServerException) as e:
-            if not self.mock:
-                raise Exception(f"阿里云OCR服务错误：{str(e)}")
-            return "工作经验：5年\n技能：Python, FastAPI\n教育背景：计算机科学学士"
+            if "Data" in response_json and "Content" in response_json["Data"]:
+                return response_json["Data"]["Content"]
+            
+            logger.error(f"OCR服务返回格式错误: {response_json}")
+            return None
+        except Exception as e:
+            logger.error(f"OCR文本提取失败: {str(e)}")
+            return None
+    
+    async def extract_text_from_base64(self, base64_content: str) -> Optional[str]:
+        """
+        从Base64编码的内容中提取文本
+        
+        Args:
+            base64_content: Base64编码的文件内容
+            
+        Returns:
+            提取的文本内容，如果失败则返回None
+        """
+        try:
+            request = RecognizeGeneralRequest()
+            request.set_body(base64_content)
+            
+            # 调用阿里云OCR服务
+            response = self.client.do_action_with_exception(request)
+            response_json = json.loads(response)
+            
+            # 提取文本内容
+            if "Data" in response_json and "Content" in response_json["Data"]:
+                return response_json["Data"]["Content"]
+            
+            logger.error(f"OCR服务返回格式错误: {response_json}")
+            return None
+        except Exception as e:
+            logger.error(f"OCR文本提取失败: {str(e)}")
+            return None
