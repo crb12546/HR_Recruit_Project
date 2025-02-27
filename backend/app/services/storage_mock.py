@@ -17,3 +17,7 @@ class StorageService:
         if file_name in self.files:
             return self.files[file_name]["url"]
         return None
+
+def _get_file_size(self, file_content):
+    """获取文件大小"""
+    return len(file_content)

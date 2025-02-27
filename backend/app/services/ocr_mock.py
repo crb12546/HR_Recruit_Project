@@ -18,3 +18,13 @@ class Client:
     def do_action_with_exception(self, request):
         # Return mock OCR result as string, not bytes
         return '{"Data": {"Content": "这是一份测试简历\\n姓名：张三\\n学历：本科\\n技能：Python, FastAPI, Vue.js"}}'.encode('utf-8')
+
+def _is_file_empty(self, file_url):
+    """检查文件是否为空"""
+    # 模拟实现，实际应该检查文件内容
+    return "empty" in file_url
+
+def _get_file_type(self, file_url):
+    """获取文件类型"""
+    # 从URL中提取文件扩展名
+    return file_url.split(".")[-1]

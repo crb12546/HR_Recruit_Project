@@ -74,3 +74,9 @@ class OnboardingTask(Base):
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None
         }
+
+def validate_deadline(self, start_date):
+    """验证任务截止日期是否有效"""
+    if self.deadline and start_date and self.deadline > start_date:
+        raise ValueError("任务截止日期必须在入职日期之前")
+    return True
