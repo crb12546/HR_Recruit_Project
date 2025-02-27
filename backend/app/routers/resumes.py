@@ -79,11 +79,20 @@ async def upload_resume(
             talent_portrait=talent_portrait
         )
         
+        # 保存到数据库
+        db.add(resume)
+        db.commit()
+        db.refresh(resume)
+        
         # 生成标签
         tags = tag_service.generate_resume_tags(resume)
         
-        # 保存到数据库
-        db.add(resume)
+        # 更新简历标签关系
+        for tag_dict in tags:
+            tag = db.query(Tag).filter(Tag.id == tag_dict["id"]).first()
+            if tag:
+                resume.tags.append(tag)
+        
         db.commit()
         db.refresh(resume)
         
@@ -127,8 +136,15 @@ async def parse_resume(
         # 生成标签
         tags = tag_service.generate_resume_tags(resume)
         
-        # 更新简历
-        resume.tags = [Tag(**tag) for tag in tags]
+        # 清除现有标签
+        resume.tags = []
+        
+        # 更新简历标签关系
+        for tag_dict in tags:
+            tag = db.query(Tag).filter(Tag.id == tag_dict["id"]).first()
+            if tag:
+                resume.tags.append(tag)
+        
         db.commit()
         db.refresh(resume)
         
