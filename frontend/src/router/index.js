@@ -4,6 +4,9 @@ import JobDetail from '../components/job/JobDetail.vue'
 import InterviewList from '../components/interview/InterviewList.vue'
 import InterviewSchedule from '../components/interview/InterviewSchedule.vue'
 import InterviewFeedback from '../components/interview/InterviewFeedback.vue'
+import OnboardingList from '../components/onboarding/OnboardingList.vue'
+import OnboardingForm from '../components/onboarding/OnboardingForm.vue'
+import OnboardingDetail from '../components/onboarding/OnboardingDetail.vue'
 
 const routes = [
   {
@@ -39,6 +42,26 @@ const routes = [
     path: '/interviews/:id/feedback',
     name: 'InterviewFeedback',
     component: InterviewFeedback
+  },
+  {
+    path: '/onboardings',
+    name: 'OnboardingList',
+    component: OnboardingList
+  },
+  {
+    path: '/onboardings/new',
+    name: 'OnboardingCreate',
+    component: OnboardingForm
+  },
+  {
+    path: '/onboardings/:id',
+    name: 'OnboardingDetail',
+    component: OnboardingDetail
+  },
+  {
+    path: '/onboardings/:id/edit',
+    name: 'OnboardingEdit',
+    component: OnboardingForm
   }
 ]
 
