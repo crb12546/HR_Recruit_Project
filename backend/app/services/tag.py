@@ -5,6 +5,18 @@ from app.models.tag import Tag
 from app.models.resume import Resume
 from app.services.gpt import GPTService
 
+def create_or_get_tags(db: Session, tag_names: List[str]) -> List[Tag]:
+    """创建或获取标签"""
+    result = []
+    for name in tag_names:
+        tag = db.query(Tag).filter(Tag.name == name).first()
+        if not tag:
+            tag = Tag(name=name)
+            db.add(tag)
+            db.flush()
+        result.append(tag)
+    return result
+
 class TagService:
     """标签服务实现"""
     

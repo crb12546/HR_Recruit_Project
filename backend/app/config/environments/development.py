@@ -1,22 +1,16 @@
-"""开发环境配置"""
-from typing import Dict, Any
+"""
+开发环境配置模块
+"""
+from .base import BaseConfig
 
-# 开发环境配置
-DEVELOPMENT_CONFIG: Dict[str, Any] = {
-    "TESTING": False,
-    "DEBUG": True,
-    "DATABASE_URL": "mysql+mysqlconnector://root:password@localhost:3306/hr_recruit_dev",
-    "MOCK_SERVICES": False,
-    "OCR_SERVICE": "aliyun",
-    "STORAGE_SERVICE": "aliyun",
-    "GPT_SERVICE": "openai",
-    "ALIYUN_ACCESS_KEY": "",
-    "ALIYUN_SECRET_KEY": "",
-    "ALIYUN_REGION": "cn-hangzhou",
-    "ALIYUN_BUCKET": "hr-recruit-dev",
-    "OPENAI_API_KEY": ""
-}
-
-def get_development_config() -> Dict[str, Any]:
-    """获取开发环境配置"""
-    return DEVELOPMENT_CONFIG
+class DevelopmentConfig(BaseConfig):
+    """开发环境配置类"""
+    ENV = "development"
+    DEBUG = True
+    TESTING = False
+    
+    # 开发环境数据库配置
+    DATABASE_URL = "sqlite:///./hr_recruitment_dev.db"
+    
+    # 开发环境默认使用模拟服务
+    SERVICE_MODE = "mock"

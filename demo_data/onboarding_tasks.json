@@ -1,0 +1,44 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "onboarding_id": 1,
+      "title": "完成入职文档",
+      "description": "填写个人信息表、银行账户信息、保密协议等文档",
+      "deadline": "2025-04-02T00:00:00",
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "onboarding_id": 1,
+      "title": "领取办公设备",
+      "description": "领取笔记本电脑、门禁卡、工牌等办公设备",
+      "deadline": "2025-04-02T00:00:00",
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "onboarding_id": 1,
+      "title": "参加新员工培训",
+      "description": "参加公司文化、规章制度、福利待遇等培训",
+      "deadline": "2025-04-05T00:00:00",
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "onboarding_id": 1,
+      "title": "技术培训",
+      "description": "参加前端技术栈、开发流程、代码规范等培训",
+      "deadline": "2025-04-10T00:00:00",
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "onboarding_id": 1,
+      "title": "完成入职项目",
+      "description": "完成一个小型前端项目，熟悉公司技术栈和开发流程",
+      "deadline": "2025-04-20T00:00:00",
+      "status": "pending"
+    }
+  ]
+}

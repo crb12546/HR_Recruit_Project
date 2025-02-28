@@ -13,3 +13,10 @@ openai==1.12.0
 mysqlclient==2.2.3
 aliyun-python-sdk-core==2.16.0
 aliyun-python-sdk-ocr==1.0.25
+gunicorn==21.2.0
+python-dotenv==1.0.1
+mysql-connector-python==8.3.0
+pydantic==2.6.1
+pydantic-settings==2.1.0
+tenacity==8.2.3
+loguru==0.7.2

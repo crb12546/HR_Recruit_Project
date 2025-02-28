@@ -1,4 +1,6 @@
-"""生产环境配置"""
+"""
+生产环境配置模块
+"""
 from .base import BaseConfig
 
 class ProductionConfig(BaseConfig):
@@ -8,7 +10,7 @@ class ProductionConfig(BaseConfig):
     TESTING = False
     
     # 生产环境数据库配置
-    DATABASE_URL = "mysql+mysqlconnector://user:password@localhost/hr_recruitment"
+    DATABASE_URL = "sqlite:///./hr_recruitment.db"
     
-    # 生产环境默认使用真实服务
-    SERVICE_MODE = "production"
+    # 生产环境默认使用模拟服务
+    SERVICE_MODE = "mock"
