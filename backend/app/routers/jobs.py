@@ -1,23 +1,39 @@
 """招聘需求管理路由"""
 import os
-from fastapi import APIRouter, Depends, HTTPException, Body
+import logging
+from fastapi import APIRouter, Depends, HTTPException, Body, Request
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Dict, Any
 from app.database import get_db
 from app.models.job_requirement import JobRequirement
 from app.models.resume import Resume
 from app.models.tag import Tag
 from app.services.gpt import GPTService
+from app.utils.db_utils import safe_commit
+
+# 获取日志记录器
+logger = logging.getLogger("hr_recruitment")
 
 router = APIRouter(prefix="/api/v1/jobs", tags=["jobs"])
 
 @router.post("", status_code=201)
 async def create_job_requirement(
+    request: Request,
     job_data: Dict[str, Any] = Body(...),
     db: Session = Depends(get_db)
 ):
     """创建招聘需求"""
     try:
+        # 记录请求数据
+        logger.info(f"创建招聘需求请求: {job_data}")
+        
+        # 验证必填字段
+        required_fields = ["position_name", "department", "responsibilities", "requirements"]
+        for field in required_fields:
+            if not job_data.get(field):
+                raise HTTPException(status_code=400, detail=f"缺少必填字段: {field}")
+        
         # 初始化GPT服务
         gpt_service = GPTService()
         
@@ -38,8 +54,13 @@ async def create_job_requirement(
         
         # 保存到数据库
         db.add(job)
-        db.commit()
+        if not safe_commit(db, "创建招聘需求失败"):
+            raise HTTPException(status_code=500, detail="数据库保存失败")
+        
         db.refresh(job)
+        
+        # 记录成功创建
+        logger.info(f"成功创建招聘需求: ID={job.id}, 职位={job.position_name}")
         
         # 测试环境下返回响应
         if os.getenv("ENV") == "test":
@@ -57,7 +78,16 @@ async def create_job_requirement(
             
         return job_to_dict(job)
         
+    except HTTPException:
+        raise
+    except SQLAlchemyError as e:
+        logger.error(f"数据库错误: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"数据库操作失败: {str(e)}"
+        )
     except Exception as e:
+        logger.error(f"创建招聘需求失败: {str(e)}")
         raise HTTPException(
             status_code=500,
             detail=f"创建招聘需求失败: {str(e)}"
