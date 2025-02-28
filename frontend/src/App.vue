@@ -35,14 +35,17 @@ export default {
     // 监听哈希变化
     window.addEventListener('hashchange', this.setModuleFromHash);
   },
-  beforeUnmount() {
+  beforeDestroy() {  // Vue 2中使用beforeDestroy而不是beforeUnmount
     // 移除事件监听器
     window.removeEventListener('hashchange', this.setModuleFromHash);
   },
   methods: {
     setModuleFromHash() {
       // 从URL哈希获取当前模块
-      const hash = window.location.hash.substring(1);
+      const hash = window.location.hash.substring(1) || 'resume';
+      console.log('Hash changed to:', hash);
+      console.log('Setting currentModule based on hash');
+      
       switch(hash) {
         case 'job':
           this.currentModule = 'JobList';
@@ -58,6 +61,7 @@ export default {
           this.currentModule = 'ResumeList';
           break;
       }
+      console.log('Current module set to:', this.currentModule);
     }
   }
 }
