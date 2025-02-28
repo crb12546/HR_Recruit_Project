@@ -54,17 +54,23 @@ export default {
   methods: {
     navigateTo(module) {
       // 更新URL哈希
+      console.log('Navigating to:', module);
       window.location.hash = module;
       this.activeModule = module;
     },
     setActiveModuleFromHash() {
       // 从URL哈希获取当前模块
       const hash = window.location.hash.substring(1);
+      console.log('Setting active module from hash:', hash);
       if (hash && ['resume', 'job', 'interview', 'onboarding'].includes(hash)) {
         this.activeModule = hash;
       } else {
         // 默认为简历管理
         this.activeModule = 'resume';
+        // 如果没有哈希值，设置为默认值
+        if (!hash) {
+          window.location.hash = 'resume';
+        }
       }
     }
   }
