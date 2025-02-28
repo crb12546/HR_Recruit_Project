@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .database import get_db, init_db
-from .routers.__init__ import resumes_router, jobs_router, interviews_router, onboardings_router
+from .routers import resumes_router, jobs_router, interviews_router, onboardings_router
 from app.config.config import get_config, reload_config
 from app.config.logging_config import get_logger
 from app.middleware.db_session import DBSessionMiddleware
