@@ -26,6 +26,8 @@ services:
       dockerfile: Dockerfile.test
     volumes:
       - ./backend:/app
+      - ./backend/tests/mocks/data:/app/tests/mocks/data
+      - ./backend/tests/mocks/storage:/app/tests/mocks/storage
     ports:
       - "8000:8000"
     environment:

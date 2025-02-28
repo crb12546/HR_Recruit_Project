@@ -1,0 +1,22 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "position_name": "Python高级工程师",
+      "department": "技术部",
+      "job_description": "负责公司核心系统的开发和维护",
+      "requirements": "1. 精通Python编程语言\n2. 熟悉FastAPI框架\n3. 有5年以上开发经验",
+      "salary_range": "25k-35k",
+      "status": "open"
+    },
+    {
+      "id": 2,
+      "position_name": "前端开发工程师",
+      "department": "技术部",
+      "job_description": "负责公司前端系统的开发和维护",
+      "requirements": "1. 精通Vue.js框架\n2. 熟悉前端工程化\n3. 有3年以上开发经验",
+      "salary_range": "20k-30k",
+      "status": "open"
+    }
+  ]
+}

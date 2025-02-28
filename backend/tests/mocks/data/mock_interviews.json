@@ -1,0 +1,34 @@
+{
+  "interviews": [
+    {
+      "id": 1,
+      "resume_id": 1,
+      "job_requirement_id": 1,
+      "interviewer_id": 1,
+      "interview_time": "2025-03-15T14:00:00",
+      "status": "scheduled",
+      "feedback": null,
+      "rating": null,
+      "interview_questions": [
+        "请描述一下你使用Python解决过的最复杂的问题？",
+        "你如何理解FastAPI的异步特性？",
+        "你在项目中如何使用Vue.js进行状态管理？"
+      ]
+    },
+    {
+      "id": 2,
+      "resume_id": 2,
+      "job_requirement_id": 2,
+      "interviewer_id": 1,
+      "interview_time": "2025-03-16T10:00:00",
+      "status": "scheduled",
+      "feedback": null,
+      "rating": null,
+      "interview_questions": [
+        "请描述一下你使用React开发的最复杂的组件？",
+        "你如何处理前端性能优化问题？",
+        "你在项目中如何进行前端测试？"
+      ]
+    }
+  ]
+}

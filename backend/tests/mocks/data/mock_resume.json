@@ -1,0 +1,34 @@
+{
+  "resumes": [
+    {
+      "id": 1,
+      "candidate_name": "张三",
+      "file_url": "https://test-bucket.oss.aliyuncs.com/resume_1.pdf",
+      "file_type": "pdf",
+      "ocr_content": "姓名：张三\n学历：本科\n技能：Python, FastAPI, Vue.js\n工作经验：5年\n联系电话：13800138000",
+      "parsed_content": {
+        "name": "张三",
+        "education": "本科",
+        "skills": ["Python", "FastAPI", "Vue.js"],
+        "experience": "5年",
+        "contact": "13800138000"
+      },
+      "talent_portrait": "张三是一名有5年经验的全栈开发工程师，精通Python和Vue.js，有丰富的FastAPI开发经验。"
+    },
+    {
+      "id": 2,
+      "candidate_name": "李四",
+      "file_url": "https://test-bucket.oss.aliyuncs.com/resume_2.docx",
+      "file_type": "docx",
+      "ocr_content": "姓名：李四\n学历：硕士\n技能：Java, Spring Boot, React\n工作经验：3年\n联系电话：13900139000",
+      "parsed_content": {
+        "name": "李四",
+        "education": "硕士",
+        "skills": ["Java", "Spring Boot", "React"],
+        "experience": "3年",
+        "contact": "13900139000"
+      },
+      "talent_portrait": "李四是一名有3年经验的后端开发工程师，精通Java和Spring Boot，有良好的React前端开发能力。"
+    }
+  ]
+}
