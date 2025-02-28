@@ -1,41 +1,58 @@
 version: '3.8'
 
 services:
-  mysql-test:
+  db:
     image: mysql:8.0
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: test_password
       MYSQL_DATABASE: hr_recruit_test
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
     ports:
-      - "3307:3306"
+      - "3306:3306"
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-  backend-test:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.test
-    environment:
-      - DB_HOST=mysql-test
-      - DB_PORT=3306
-      - DB_NAME=hr_recruit_test
-      - DB_USER=root
-      - DB_PASSWORD=test_password
-      - OPENAI_API_KEY=${OPENAI}
-      - ENV=test
     volumes:
       - ./backend:/app
     ports:
       - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql+mysqlconnector://testuser:testpassword@db:3306/hr_recruit_test
+      - TESTING=True
+      - MOCK_SERVICES=True
     depends_on:
-      - mysql-test
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head &&
+             pytest -xvs tests/"
 
-  frontend-test:
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.test
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_BASE_URL=http://backend-test:8000
-      - NODE_ENV=test
+      - VITE_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    command: npm run test
+
+volumes:
+  mysql_test_data:
