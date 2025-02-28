@@ -1,0 +1,30 @@
+app = "hr-recruitment-backend"
+primary_region = "hkg"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  APP_ENV = "production"
+  SERVICE_MODE = "mock"
+  APP_PORT = "8000"
+  APP_HOST = "0.0.0.0"
+  DATABASE_URL = "sqlite:///./hr_recruitment.db"
+  GPT_API_KEY = "mock_key"
+  GPT_API_BASE = "https://api.openai.com/v1"
+  GPT_MODEL = "gpt-4"
+  LOG_LEVEL = "INFO"
+  LOG_DIR = "logs"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 1024

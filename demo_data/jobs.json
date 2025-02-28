@@ -1,0 +1,31 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "position_name": "Python高级工程师",
+      "department": "技术部",
+      "job_description": "负责后端系统开发和维护",
+      "requirements": "5年以上Python开发经验，熟悉FastAPI框架",
+      "salary_range": "25k-35k",
+      "status": "open"
+    },
+    {
+      "id": 2,
+      "position_name": "前端开发工程师",
+      "department": "技术部",
+      "job_description": "负责前端界面开发和用户体验优化",
+      "requirements": "3年以上前端开发经验，熟悉Vue.js框架",
+      "salary_range": "20k-30k",
+      "status": "open"
+    },
+    {
+      "id": 3,
+      "position_name": "产品经理",
+      "department": "产品部",
+      "job_description": "负责产品规划和需求分析",
+      "requirements": "3年以上产品经理经验，熟悉互联网产品开发流程",
+      "salary_range": "25k-35k",
+      "status": "open"
+    }
+  ]
+}

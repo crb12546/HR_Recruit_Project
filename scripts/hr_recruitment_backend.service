@@ -1,0 +1,17 @@
+[Unit]
+Description=HR Recruitment Backend Service
+After=network.target mysql.service
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/hr_recruitment/backend
+Environment="PATH=/opt/hr_recruitment/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+EnvironmentFile=/opt/hr_recruitment/backend/.env.production
+ExecStart=/opt/hr_recruitment/venv/bin/gunicorn app.main:app -c gunicorn_config.py
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+{
+  "onboardings": [
+    {
+      "id": 1,
+      "resume_id": 2,
+      "job_requirement_id": 2,
+      "department": "技术部",
+      "position": "前端开发工程师",
+      "salary": "25k",
+      "offer_date": "2025-03-15T00:00:00",
+      "start_date": "2025-04-01T00:00:00",
+      "probation_end_date": "2025-07-01T00:00:00",
+      "status": "pending",
+      "notes": "优秀候选人，尽快入职"
+    }
+  ]
+}
