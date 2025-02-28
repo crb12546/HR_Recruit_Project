@@ -10,6 +10,8 @@ from .models.job_requirement import JobRequirement
 from .models.resume import Resume
 from .models.interview import Interview
 from .models.user import User
+from .models.tag import Tag
+from .models.onboarding import Onboarding, OnboardingTask
 
 Base = declarative_base()
 

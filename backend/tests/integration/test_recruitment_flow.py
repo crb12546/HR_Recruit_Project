@@ -92,3 +92,70 @@ def test_complete_recruitment_flow(
     )
     assert response.status_code == 200
     assert response.json()["status"] == "completed"
+
+def test_onboarding_flow(
+    client,
+    mocker,
+    sample_job_requirement,
+    sample_resume
+):
+    # 1. 创建入职记录
+    onboarding_data = {
+        "resume_id": sample_resume.id,
+        "job_requirement_id": sample_job_requirement.id,
+        "status": "pending",
+        "offer_date": datetime.utcnow().isoformat(),
+        "start_date": (datetime.utcnow() + timedelta(days=30)).isoformat(),
+        "department": "技术部",
+        "position": "Python开发工程师",
+        "salary": "30k",
+        "generate_tasks": True
+    }
+    
+    # 模拟GPT服务生成入职任务
+    mock_gpt = mocker.patch.object(GPTService, 'generate_onboarding_tasks')
+    mock_gpt.return_value = [
+        {"name": "完成入职文档", "description": "填写并签署所有入职文档"},
+        {"name": "参加入职培训", "description": "参加公司文化和技术培训"},
+        {"name": "配置开发环境", "description": "安装和配置所需的开发工具和环境"}
+    ]
+    
+    response = client.post("/api/v1/onboardings", json=onboarding_data)
+    assert response.status_code == 201
+    onboarding = response.json()
+    assert onboarding["status"] == "pending"
+    assert len(onboarding["tasks"]) == 3
+    
+    # 2. 更新入职状态
+    update_data = {
+        "status": "in_progress",
+        "notes": "入职流程已开始"
+    }
+    
+    response = client.put(f"/api/v1/onboardings/{onboarding['id']}", json=update_data)
+    assert response.status_code == 200
+    updated_onboarding = response.json()
+    assert updated_onboarding["status"] == "in_progress"
+    
+    # 3. 更新任务状态
+    task_id = onboarding["tasks"][0]["id"]
+    task_update = {
+        "status": "completed"
+    }
+    
+    response = client.put(f"/api/v1/onboardings/tasks/{task_id}", json=task_update)
+    assert response.status_code == 200
+    updated_task = response.json()
+    assert updated_task["status"] == "completed"
+    assert updated_task["completed_at"] is not None
+    
+    # 4. 完成入职流程
+    final_update = {
+        "status": "completed",
+        "notes": "入职流程已完成"
+    }
+    
+    response = client.put(f"/api/v1/onboardings/{onboarding['id']}", json=final_update)
+    assert response.status_code == 200
+    final_onboarding = response.json()
+    assert final_onboarding["status"] == "completed"

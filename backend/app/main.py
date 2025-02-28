@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from .database import get_db
-from .routers import resumes, jobs, interviews
+from .routers import resumes, jobs, interviews, onboardings
 
 app = FastAPI(title="HR Recruitment System")
 
@@ -9,6 +9,7 @@ app = FastAPI(title="HR Recruitment System")
 app.include_router(resumes.router, prefix="/api/v1")
 app.include_router(jobs.router, prefix="/api/v1")
 app.include_router(interviews.router, prefix="/api/v1")
+app.include_router(onboardings.router, prefix="/api/v1")
 
 @app.get("/health")
 def health_check(db: Session = Depends(get_db)):

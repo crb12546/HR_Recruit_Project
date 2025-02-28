@@ -87,3 +87,82 @@ def test_complete_recruitment_flow_e2e(driver):
     # 验证面试状态
     status_element = driver.find_element(By.CLASS_NAME, "interview-status")
     assert "待面试" in status_element.text
+
+def test_onboarding_flow_e2e(driver):
+    # 1. 登录系统
+    driver.get("http://localhost:5173/login")
+    driver.find_element(By.NAME, "username").send_keys("hr@example.com")
+    driver.find_element(By.NAME, "password").send_keys("password123")
+    driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+    
+    # 等待跳转到首页
+    WebDriverWait(driver, 10).until(
+        EC.url_to_be("http://localhost:5173/dashboard")
+    )
+    
+    # 2. 进入入职管理页面
+    driver.find_element(By.LINK_TEXT, "入职管理").click()
+    
+    # 3. 创建入职记录
+    driver.find_element(By.CSS_SELECTOR, "button.el-button--primary").click()
+    
+    # 选择候选人
+    driver.find_element(By.CSS_SELECTOR, ".resume-select").click()
+    driver.find_element(By.CSS_SELECTOR, ".el-select-dropdown__item").click()
+    
+    # 选择职位
+    driver.find_element(By.CSS_SELECTOR, ".job-select").click()
+    driver.find_element(By.CSS_SELECTOR, ".el-select-dropdown__item").click()
+    
+    # 填写入职信息
+    driver.find_element(By.NAME, "department").send_keys("技术部")
+    driver.find_element(By.NAME, "position").send_keys("Python开发工程师")
+    driver.find_element(By.NAME, "salary").send_keys("30k")
+    
+    # 选择日期
+    driver.find_element(By.NAME, "offer_date").send_keys("2025-03-01")
+    driver.find_element(By.NAME, "start_date").send_keys("2025-04-01")
+    
+    # 提交表单
+    driver.find_element(By.CSS_SELECTOR, ".submit-btn").click()
+    
+    # 等待创建成功提示
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "el-message--success"))
+    )
+    
+    # 4. 查看入职详情
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".onboarding-list"))
+    )
+    
+    driver.find_element(By.LINK_TEXT, "查看详情").click()
+    
+    # 验证入职任务列表
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".tasks-card"))
+    )
+    
+    tasks = driver.find_elements(By.CSS_SELECTOR, ".el-table__row")
+    assert len(tasks) > 0
+    
+    # 5. 添加新任务
+    driver.find_element(By.LINK_TEXT, "添加任务").click()
+    
+    WebDriverWait(driver, 10).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, ".el-dialog"))
+    )
+    
+    driver.find_element(By.CSS_SELECTOR, "input[placeholder='请输入任务名称']").send_keys("领取工作电脑")
+    driver.find_element(By.CSS_SELECTOR, "textarea[placeholder='请输入任务描述']").send_keys("从IT部门领取工作用笔记本电脑")
+    
+    driver.find_element(By.CSS_SELECTOR, ".dialog-footer .el-button--primary").click()
+    
+    # 等待添加成功提示
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "el-message--success"))
+    )
+    
+    # 验证任务已添加
+    tasks = driver.find_elements(By.CSS_SELECTOR, ".el-table__row")
+    assert len(tasks) > 0

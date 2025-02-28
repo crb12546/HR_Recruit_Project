@@ -16,3 +16,9 @@ class Interview(Base):
     score = Column(Float)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+def validate_interview_time(self):
+    """验证面试时间是否有效"""
+    if self.interview_time and self.interview_time < datetime.now():
+        raise ValueError("面试时间不能在过去")
+    return True
