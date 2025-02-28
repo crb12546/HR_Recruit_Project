@@ -3,7 +3,7 @@
 """
 import os
 import logging
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.config.config import get_config
@@ -46,12 +46,17 @@ def init_db():
     try:
         # 导入所有模型以确保它们在创建表时被注册
         # 这里导入是为了避免循环导入问题
-        from app.models.init_models import JobRequirement, Resume, Interview, User, Tag, Onboarding, OnboardingTask
+        import app.models
         
         # 创建所有表
         logger.info("正在初始化数据库表...")
         Base.metadata.create_all(bind=engine)
         logger.info("数据库表初始化完成")
+        
+        # 测试数据库连接
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+            logger.info("数据库连接测试成功")
         
         return True
     except Exception as e:

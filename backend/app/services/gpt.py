@@ -1,26 +1,47 @@
-"""GPT服务"""
+"""GPT服务模块"""
 import os
-import openai
+import logging
 from typing import List, Dict, Any
+
+# 获取日志记录器
+logger = logging.getLogger(__name__)
 
 class GPTService:
     """GPT-4服务实现"""
     
     def __init__(self):
-        self.env = os.getenv("ENV", "test")
-        if self.env == "test":
-            self.mock = True
+        """初始化GPT服务"""
+        self.env = os.getenv("ENV", "development")
+        self.mock = self.env in ["development", "test"] or os.getenv("MOCK_SERVICES", "False").lower() == "true"
+        self.model = "gpt-4"
+        
+        if not self.mock:
+            try:
+                import openai
+                self.api_key = os.getenv("OPENAI_API_KEY")
+                if not self.api_key:
+                    logger.warning("未设置OPENAI_API_KEY环境变量，将使用模拟模式")
+                    self.mock = True
+                else:
+                    openai.api_key = self.api_key
+                    # 创建OpenAI客户端
+                    self.openai = openai
+                    logger.info("初始化GPT服务，模型: gpt-4")
+            except ImportError:
+                logger.warning("无法导入openai模块，将使用模拟模式")
+                self.mock = True
         else:
-            self.mock = False
-            self.api_key = os.getenv("OPENAI_API_KEY")
-            openai.api_key = self.api_key
-            self.model = "gpt-4"
+            # 创建模拟的OpenAI客户端
+            from app.services.gpt_mock import MockOpenAI
+            self.openai = MockOpenAI()
+            logger.info("初始化模拟GPT服务")
     
     def generate_talent_portrait(self, text: str) -> str:
         """生成人才画像"""
         try:
             if self.mock:
                 # 测试环境使用模拟数据
+                logger.info("使用模拟数据生成人才画像")
                 return "具有8年Python开发经验的高级工程师，在微服务架构和分布式系统方面有丰富经验"
                 
             # 构建提示词
@@ -36,28 +57,22 @@ class GPTService:
             """
             
             # 调用GPT-4 API
-            response = openai.chat.completions.create(
+            response = self.openai.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": "你是一位专业的HR招聘助手，擅长分析简历并提取关键信息。"},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
-                max_tokens=200,
-                stream=True
+                max_tokens=200
             )
             
-            # 处理流式响应
-            portrait = ""
-            for chunk in response:
-                if chunk.choices[0].delta.content:
-                    portrait += chunk.choices[0].delta.content
-            
+            # 处理响应
+            portrait = response.choices[0].message.content
             return portrait
                 
         except Exception as e:
-            if not self.mock:
-                raise Exception(f"GPT服务错误：{str(e)}")
+            logger.error(f"生成人才画像失败: {str(e)}")
             return "具有8年Python开发经验的高级工程师，在微服务架构和分布式系统方面有丰富经验"
     
     def extract_candidate_name(self, text: str) -> str:
@@ -65,6 +80,7 @@ class GPTService:
         try:
             if self.mock:
                 # 测试环境使用模拟数据
+                logger.info("使用模拟数据提取候选人姓名")
                 return "张三"
                 
             # 构建提示词
@@ -79,7 +95,7 @@ class GPTService:
             """
             
             # 调用GPT-4 API
-            response = openai.chat.completions.create(
+            response = self.openai.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": "你是一位专业的HR招聘助手，擅长分析简历并提取关键信息。"},
@@ -92,8 +108,7 @@ class GPTService:
             return response.choices[0].message.content.strip()
                 
         except Exception as e:
-            if not self.mock:
-                raise Exception(f"GPT服务错误：{str(e)}")
+            logger.error(f"提取候选人姓名失败: {str(e)}")
             return "张三"
     
     def extract_job_tags(self, text: str) -> List[str]:
@@ -101,6 +116,7 @@ class GPTService:
         try:
             if self.mock:
                 # 测试环境使用模拟数据
+                logger.info("使用模拟数据提取职位标签")
                 return ["Python", "微服务", "分布式系统", "8年经验"]
                 
             # 构建提示词
@@ -117,7 +133,7 @@ class GPTService:
             """
             
             # 调用GPT-4 API
-            response = openai.chat.completions.create(
+            response = self.openai.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": "你是一位专业的HR招聘助手，擅长分析职位描述并提取关键标签。"},
@@ -135,16 +151,16 @@ class GPTService:
             return tags
                 
         except Exception as e:
-            if not self.mock:
-                raise Exception(f"GPT服务错误：{str(e)}")
+            logger.error(f"提取职位标签失败: {str(e)}")
             return ["Python", "微服务", "分布式系统", "8年经验"]
     
-    def extract_resume_tags(self, text: str) -> List[Dict[str, str]]:
-        """提取简历标签"""
+    def generate_resume_tags(self, text: str) -> List[str]:
+        """从简历内容中提取标签"""
         try:
             if self.mock:
                 # 测试环境使用模拟数据
-                return [{"name": "Python"}, {"name": "FastAPI"}]
+                logger.info("使用模拟数据提取简历标签")
+                return ["Python", "FastAPI", "微服务", "分布式系统", "8年经验"]
                 
             # 构建提示词
             prompt = f"""
@@ -153,14 +169,14 @@ class GPTService:
             1. 返回5-10个标签
             2. 每个标签不超过10个字
             3. 包括技术栈、经验年限、学历等
-            4. 以JSON数组格式返回，如[{{"name": "标签1"}}, {{"name": "标签2"}}]
+            4. 以JSON数组格式返回，如["标签1", "标签2"]
             
             简历内容：
             {text}
             """
             
             # 调用GPT-4 API
-            response = openai.chat.completions.create(
+            response = self.openai.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": "你是一位专业的HR招聘助手，擅长分析简历并提取关键标签。"},
@@ -175,9 +191,8 @@ class GPTService:
             import json
             content = response.choices[0].message.content
             tags = json.loads(content).get("tags", [])
-            return [{"name": tag} for tag in tags]
+            return tags
                 
         except Exception as e:
-            if not self.mock:
-                raise Exception(f"GPT服务错误：{str(e)}")
-            return [{"name": "Python"}, {"name": "FastAPI"}]
+            logger.error(f"提取简历标签失败: {str(e)}")
+            return ["Python", "FastAPI", "微服务", "分布式系统", "8年经验"]

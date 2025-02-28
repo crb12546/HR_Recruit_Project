@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .database import get_db, init_db
-from .routers import resumes, jobs, interviews, onboardings
+from .routers.__init__ import resumes_router, jobs_router, interviews_router, onboardings_router
 from app.config.config import get_config, reload_config
 from app.config.logging_config import get_logger
 from app.middleware.db_session import DBSessionMiddleware
@@ -49,10 +49,10 @@ app.add_middleware(
 app.add_middleware(DBSessionMiddleware)
 
 # 包含API路由
-app.include_router(resumes.router)
-app.include_router(jobs.router)
-app.include_router(interviews.router)
-app.include_router(onboardings.router)
+app.include_router(resumes_router)
+app.include_router(jobs_router)
+app.include_router(interviews_router)
+app.include_router(onboardings_router)
 
 # 全局异常处理
 @app.exception_handler(HTTPException)
@@ -77,7 +77,8 @@ def health_check(db: Session = Depends(get_db)):
     logger.info("健康检查请求")
     try:
         # 尝试执行一个简单的数据库查询来验证数据库连接
-        db.execute("SELECT 1")
+        from sqlalchemy import text
+        db.execute(text("SELECT 1"))
         db_status = "connected"
     except Exception as e:
         logger.error(f"数据库连接失败: {str(e)}")

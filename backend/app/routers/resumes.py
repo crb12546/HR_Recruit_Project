@@ -11,11 +11,11 @@ from ..services.service_factory import get_ocr_service, get_storage_service, get
 from ..services.tag import create_or_get_tags
 from ..utils.db_utils import safe_commit
 
-router = APIRouter(tags=["resumes"])
+router = APIRouter(prefix="/api/v1/resumes", tags=["resumes"])
 
 logger = logging.getLogger("hr_recruitment")
 
-@router.post("/resumes/upload", status_code=status.HTTP_201_CREATED)
+@router.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_resume(
     request: Request,
     file: UploadFile = File(...),
@@ -108,7 +108,7 @@ async def upload_resume(
             detail=f"简历上传失败: {str(e)}"
         )
 
-@router.get("/resumes", response_model=Dict[str, Any])
+@router.get("", response_model=Dict[str, Any])
 def get_resumes(request: Request, db: Session = Depends(get_db)):
     """获取所有简历列表"""
     logger.info("获取简历列表")
@@ -132,7 +132,7 @@ def get_resumes(request: Request, db: Session = Depends(get_db)):
             detail=f"获取简历列表失败: {str(e)}"
         )
 
-@router.get("/resumes/{resume_id}", response_model=Dict[str, Any])
+@router.get("/{resume_id}", response_model=Dict[str, Any])
 def get_resume(resume_id: int, request: Request, db: Session = Depends(get_db)):
     """获取简历详情"""
     logger.info(f"获取简历详情: {resume_id}")
@@ -161,7 +161,7 @@ def get_resume(resume_id: int, request: Request, db: Session = Depends(get_db)):
             detail=f"获取简历详情失败: {str(e)}"
         )
 
-@router.delete("/resumes/{resume_id}", status_code=status.HTTP_200_OK)
+@router.delete("/{resume_id}", status_code=status.HTTP_200_OK)
 def delete_resume(resume_id: int, request: Request, db: Session = Depends(get_db)):
     """删除简历"""
     logger.info(f"删除简历: {resume_id}")
