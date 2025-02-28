@@ -1,22 +1,14 @@
 """生产环境配置"""
-from typing import Dict, Any
+from .base import BaseConfig
 
-# 生产环境配置
-PRODUCTION_CONFIG: Dict[str, Any] = {
-    "TESTING": False,
-    "DEBUG": False,
-    "DATABASE_URL": "mysql+mysqlconnector://root:password@localhost:3306/hr_recruit",
-    "MOCK_SERVICES": False,
-    "OCR_SERVICE": "aliyun",
-    "STORAGE_SERVICE": "aliyun",
-    "GPT_SERVICE": "openai",
-    "ALIYUN_ACCESS_KEY": "",
-    "ALIYUN_SECRET_KEY": "",
-    "ALIYUN_REGION": "cn-hangzhou",
-    "ALIYUN_BUCKET": "hr-recruit",
-    "OPENAI_API_KEY": ""
-}
-
-def get_production_config() -> Dict[str, Any]:
-    """获取生产环境配置"""
-    return PRODUCTION_CONFIG
+class ProductionConfig(BaseConfig):
+    """生产环境配置类"""
+    ENV = "production"
+    DEBUG = False
+    TESTING = False
+    
+    # 生产环境数据库配置
+    DATABASE_URL = "mysql+mysqlconnector://user:password@localhost/hr_recruitment"
+    
+    # 生产环境默认使用真实服务
+    SERVICE_MODE = "production"

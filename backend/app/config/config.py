@@ -1,41 +1,75 @@
 """配置模块"""
 import os
-from typing import Dict, Any
+from importlib import import_module
 
-# 默认环境
-DEFAULT_ENV = "development"
+_config_instance = None
 
-def get_config() -> Dict[str, Any]:
-    """获取应用配置"""
-    # 获取当前环境
-    env = os.environ.get("APP_ENV", DEFAULT_ENV)
-    
-    # 检查是否在测试模式
-    if os.environ.get("TESTING") == "True":
-        env = "testing"
-    
-    # 根据环境加载配置
-    if env == "development":
-        from app.config.environments.development import get_development_config
-        config = get_development_config()
-    elif env == "testing":
-        from app.config.environments.testing import get_testing_config
-        config = get_testing_config()
-    elif env == "production":
-        from app.config.environments.production import get_production_config
-        config = get_production_config()
+def _convert_value(current_value, new_value):
+    """根据当前值的类型转换新值"""
+    if isinstance(current_value, bool):
+        # 将字符串转换为布尔值
+        if isinstance(new_value, str):
+            return new_value.lower() in ('true', 'yes', '1', 'y')
+        return bool(new_value)
+    elif isinstance(current_value, int):
+        # 将字符串转换为整数
+        try:
+            return int(new_value)
+        except (ValueError, TypeError):
+            return current_value
+    elif isinstance(current_value, float):
+        # 将字符串转换为浮点数
+        try:
+            return float(new_value)
+        except (ValueError, TypeError):
+            return current_value
     else:
-        from app.config.environments.development import get_development_config
-        config = get_development_config()
+        # 其他类型直接返回
+        return new_value
+
+def load_config():
+    """加载配置"""
+    env = os.environ.get("APP_ENV", "development").lower()
     
-    # 从环境变量覆盖配置
-    for key in config:
-        env_value = os.environ.get(key)
-        if env_value:
-            # 处理布尔值
-            if env_value.lower() in ["true", "false"]:
-                config[key] = env_value.lower() == "true"
-            else:
-                config[key] = env_value
-    
-    return config
+    # 导入对应环境的配置类
+    try:
+        config_module = import_module(f"app.config.environments.{env}")
+        config_class = getattr(config_module, f"{env.capitalize()}Config")
+        config = config_class()
+        
+        # 应用环境变量覆盖
+        for key, value in os.environ.items():
+            if hasattr(config, key):
+                current_value = getattr(config, key)
+                converted_value = _convert_value(current_value, value)
+                setattr(config, key, converted_value)
+        
+        # 特殊处理数据库URL
+        if "DATABASE_URL" in os.environ:
+            config.DATABASE_URL = os.environ["DATABASE_URL"]
+            
+        return config
+    except (ImportError, AttributeError):
+        # 默认使用开发环境配置
+        from app.config.environments.development import DevelopmentConfig
+        config = DevelopmentConfig()
+        
+        # 应用环境变量覆盖
+        for key, value in os.environ.items():
+            if hasattr(config, key):
+                current_value = getattr(config, key)
+                converted_value = _convert_value(current_value, value)
+                setattr(config, key, converted_value)
+        
+        # 特殊处理数据库URL
+        if "DATABASE_URL" in os.environ:
+            config.DATABASE_URL = os.environ["DATABASE_URL"]
+            
+        return config
+
+def get_config():
+    """获取配置单例"""
+    global _config_instance
+    if _config_instance is None:
+        _config_instance = load_config()
+    return _config_instance
