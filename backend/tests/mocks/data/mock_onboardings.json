@@ -1,0 +1,37 @@
+{
+  "onboardings": [
+    {
+      "id": 1,
+      "resume_id": 1,
+      "job_requirement_id": 1,
+      "department": "技术部",
+      "position": "Python高级工程师",
+      "salary": "30k",
+      "offer_date": "2025-03-20T00:00:00",
+      "start_date": "2025-04-01T00:00:00",
+      "probation_end_date": "2025-07-01T00:00:00",
+      "status": "pending",
+      "notes": "需要提前准备开发环境",
+      "tasks": [
+        {
+          "id": 1,
+          "onboarding_id": 1,
+          "task_name": "准备开发电脑",
+          "description": "配置高性能开发笔记本，安装必要的开发软件",
+          "assignee": "IT部门",
+          "deadline": "2025-03-30T00:00:00",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "onboarding_id": 1,
+          "task_name": "配置开发环境",
+          "description": "安装Python、Docker等开发环境",
+          "assignee": "技术部门",
+          "deadline": "2025-03-31T00:00:00",
+          "status": "pending"
+        }
+      ]
+    }
+  ]
+}
