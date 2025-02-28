@@ -139,13 +139,50 @@ const currentJobId = ref(null)
 const fetchJobs = async () => {
   loading.value = true
   try {
-    const response = await fetch('/api/v1/jobs')
-    const data = await response.json()
-    jobs.value = data.jobs || []
+    // 使用模拟数据代替API调用
+    // const response = await fetch('/api/v1/jobs')
+    // const data = await response.json()
+    // jobs.value = data.jobs || []
+    
+    // 模拟数据
+    setTimeout(() => {
+      jobs.value = [
+        {
+          id: 1,
+          position_name: '高级后端工程师',
+          department: '技术部',
+          location: '北京',
+          salary_range: '25k-35k',
+          tags: ['Python', 'FastAPI', 'MySQL', '微服务'],
+          responsibilities: '负责公司核心业务系统的设计和开发，参与技术架构决策，指导初级工程师。',
+          requirements: '5年以上Python开发经验，精通FastAPI框架，熟悉微服务架构，有良好的代码风格和文档习惯。'
+        },
+        {
+          id: 2,
+          position_name: '前端开发工程师',
+          department: '技术部',
+          location: '上海',
+          salary_range: '20k-30k',
+          tags: ['Vue.js', 'JavaScript', 'CSS3', '响应式设计'],
+          responsibilities: '负责公司产品的前端开发，实现用户界面和交互功能，优化用户体验。',
+          requirements: '3年以上前端开发经验，精通Vue.js框架，熟悉现代前端工具链，有良好的团队协作能力。'
+        },
+        {
+          id: 3,
+          position_name: '产品经理',
+          department: '产品部',
+          location: '广州',
+          salary_range: '25k-40k',
+          tags: ['产品设计', '用户研究', '数据分析', '项目管理'],
+          responsibilities: '负责公司产品的规划和设计，收集用户需求，制定产品路线图，协调开发团队实现产品功能。',
+          requirements: '5年以上产品经理经验，熟悉互联网产品开发流程，有良好的沟通能力和项目管理能力。'
+        }
+      ]
+      loading.value = false
+    }, 500)
   } catch (error) {
     ElMessage.error('获取职位列表失败')
     console.error('获取职位列表失败:', error)
-  } finally {
     loading.value = false
   }
 }
@@ -158,22 +195,28 @@ const showCreateForm = () => {
 // 处理表单提交
 const handleFormSubmit = async (formData) => {
   try {
-    const response = await fetch('/api/v1/jobs', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
+    // 模拟API调用
+    // const response = await fetch('/api/v1/jobs', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(formData)
+    // })
     
-    if (response.ok) {
+    // 模拟成功响应
+    setTimeout(() => {
+      // 添加到本地数据
+      const newJob = {
+        id: jobs.value.length + 1,
+        ...formData,
+        tags: ['新职位', formData.department]
+      }
+      jobs.value.unshift(newJob)
+      
       ElMessage.success('职位发布成功')
       dialogVisible.value = false
-      fetchJobs() // 刷新列表
-    } else {
-      const error = await response.json()
-      throw new Error(error.detail || '职位发布失败')
-    }
+    }, 500)
   } catch (error) {
     ElMessage.error(error.message || '职位发布失败')
     console.error('职位发布失败:', error)
@@ -193,13 +236,38 @@ const matchResumes = async (jobId) => {
   matches.value = []
   
   try {
-    const response = await fetch(`/api/v1/jobs/${jobId}/matches`)
-    const data = await response.json()
-    matches.value = data.matches || []
+    // 模拟API调用
+    // const response = await fetch(`/api/v1/jobs/${jobId}/matches`)
+    // const data = await response.json()
+    // matches.value = data.matches || []
+    
+    // 模拟数据
+    setTimeout(() => {
+      matches.value = [
+        {
+          resume_id: 1,
+          candidate_name: '张三',
+          match_score: 85,
+          match_explanation: '候选人具有相关技术经验，符合职位要求的技术栈和经验年限。'
+        },
+        {
+          resume_id: 2,
+          candidate_name: '李四',
+          match_score: 70,
+          match_explanation: '候选人技术背景符合要求，但项目经验不足。'
+        },
+        {
+          resume_id: 3,
+          candidate_name: '王五',
+          match_score: 90,
+          match_explanation: '候选人技术能力强，项目经验丰富，完全符合职位要求。'
+        }
+      ]
+      matchLoading.value = false
+    }, 500)
   } catch (error) {
     ElMessage.error('匹配简历失败')
     console.error('匹配简历失败:', error)
-  } finally {
     matchLoading.value = false
   }
 }
