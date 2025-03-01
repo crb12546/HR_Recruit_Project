@@ -1,7 +1,9 @@
 """入职管理路由"""
 import os
-from fastapi import APIRouter, Depends, HTTPException, Body
+import logging
+from fastapi import APIRouter, Depends, HTTPException, Body, Request
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Dict, Any
 from datetime import datetime
 from app.database import get_db
@@ -9,25 +11,41 @@ from app.models.onboarding import Onboarding, OnboardingTask
 from app.models.resume import Resume
 from app.models.job_requirement import JobRequirement
 from app.services.gpt import GPTService
+from app.utils.db_utils import safe_commit
+
+# 获取日志记录器
+logger = logging.getLogger("hr_recruitment")
 
 router = APIRouter(prefix="/api/v1/onboardings", tags=["onboardings"])
 
 @router.post("", status_code=201)
 async def create_onboarding(
+    request: Request,
     onboarding_data: Dict[str, Any] = Body(...),
     db: Session = Depends(get_db)
 ):
     """创建入职记录"""
     try:
+        # 记录请求数据
+        logger.info(f"创建入职记录请求: {onboarding_data}")
+        
+        # 验证必填字段
+        required_fields = ["resume_id", "job_requirement_id", "offer_date"]
+        for field in required_fields:
+            if field not in onboarding_data:
+                raise HTTPException(status_code=400, detail=f"缺少必填字段: {field}")
+        
         # 验证简历存在
-        resume = db.query(Resume).filter(Resume.id == onboarding_data.get("resume_id")).first()
+        resume_id = onboarding_data.get("resume_id")
+        resume = db.query(Resume).filter(Resume.id == resume_id).first()
         if not resume:
-            raise HTTPException(status_code=404, detail="简历不存在")
+            raise HTTPException(status_code=404, detail=f"简历不存在 (ID: {resume_id})")
             
         # 验证职位存在
-        job = db.query(JobRequirement).filter(JobRequirement.id == onboarding_data.get("job_requirement_id")).first()
+        job_id = onboarding_data.get("job_requirement_id")
+        job = db.query(JobRequirement).filter(JobRequirement.id == job_id).first()
         if not job:
-            raise HTTPException(status_code=404, detail="招聘需求不存在")
+            raise HTTPException(status_code=404, detail=f"招聘需求不存在 (ID: {job_id})")
             
         # 解析日期
         try:
@@ -39,32 +57,44 @@ async def create_onboarding(
             
         # 创建入职记录
         onboarding = Onboarding(
-            resume_id=onboarding_data.get("resume_id"),
-            job_requirement_id=onboarding_data.get("job_requirement_id"),
+            resume_id=resume_id,
+            job_requirement_id=job_id,
             status=onboarding_data.get("status", "pending"),
             offer_date=offer_date,
             start_date=start_date,
             probation_end_date=probation_end_date,
-            department=onboarding_data.get("department"),
-            position=onboarding_data.get("position"),
+            department=onboarding_data.get("department", job.department if job else None),
+            position=onboarding_data.get("position", job.position_name if job else None),
             salary=onboarding_data.get("salary"),
             notes=onboarding_data.get("notes")
         )
         
         # 保存到数据库
         db.add(onboarding)
-        db.commit()
+        if not safe_commit(db, "创建入职记录失败"):
+            raise HTTPException(status_code=500, detail="数据库保存失败")
+        
         db.refresh(onboarding)
         
         # 生成入职任务
         if onboarding_data.get("generate_tasks", True):
             generate_onboarding_tasks(db, onboarding)
         
+        # 记录成功创建
+        logger.info(f"成功创建入职记录: ID={onboarding.id}, 简历ID={resume_id}, 职位ID={job_id}")
+        
         return onboarding.to_dict()
         
     except HTTPException:
         raise
+    except SQLAlchemyError as e:
+        logger.error(f"数据库错误: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"数据库操作失败: {str(e)}"
+        )
     except Exception as e:
+        logger.error(f"创建入职记录失败: {str(e)}")
         raise HTTPException(
             status_code=500,
             detail=f"创建入职记录失败: {str(e)}"
