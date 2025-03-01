@@ -210,17 +210,26 @@ export default defineComponent({
       console.log('开始提交表单数据')
       
       try {
+        submitting.value = true
+        console.log('开始提交面试安排数据:', form)
+        
+        // 使用改进后的API服务
         const response = await proxy.$http.interviews.schedule(form)
-        console.log('表单提交成功:', response.data)
-        ElMessage.success('面试安排成功')
+        console.log('面试安排成功，服务器响应:', response.data)
+        
+        // 数据持久化成功，记录面试ID
+        const interviewId = response.data?.id
+        if (interviewId) {
+          console.log('成功创建面试记录，ID:', interviewId)
+        }
         
         // 延迟跳转，确保消息显示
         setTimeout(() => {
           router.push('/interviews')
         }, 1000)
       } catch (error) {
-        console.error('表单提交失败:', error)
-        ElMessage.error(error?.response?.data?.detail || '面试安排失败')
+        console.error('面试安排失败:', error)
+        // 错误处理已在API服务中完成
       } finally {
         submitting.value = false
       }
